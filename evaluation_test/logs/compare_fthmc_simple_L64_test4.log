@@ -1,0 +1,62 @@
+ 
+>>> PBS_NODEFILE content:
+sophia-gpu-02.lab.alcf.anl.gov
+1n*1t
+Wed Jul 23 02:20:09 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.127.05             Driver Version: 550.127.05     CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          Off |   00000000:4E:00.0 Off |                    0 |
+| N/A   21C    P0             52W /  400W |       1MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Thu_Mar_28_02:18:24_PDT_2024
+Cuda compilation tools, release 12.4, V12.4.131
+Build cuda_12.4.r12.4/compiler.34097967_0
+Start time: 2025-07-23 02:20:09
+Python 3.9.18
+Python path: /lus/eagle/projects/fthmc/software/ml/bin/python
+PYTHONPATH: /eagle/fthmc/run
+============================================================
+>>> Arguments:
+Lattice size: 64
+Number of configurations: 100
+Beta: 6.0
+Training beta: 4.0
+Step size: 0.06
+FT step size: 0.05
+Max lag: 200
+Random seed: 2008
+Model tag: simple
+Save tag: simple
+Device: cuda
+============================================================
+>>> Neural Network Field Transformation HMC Simulation: 
+Trying to use torch.compile for optimized computation...
+Successfully initialized torch.compile
+>>> Loading trained model
+Loaded best models from epoch 32 with loss 39.772163
+>>> Model loaded successfully in 0.04 seconds
+Successfully compiled HMC functions with torch.compile
+>>> Starting thermalization with field transformation...
+>>> Initial thermalization...
+Initial thermalization:   0%|          | 0/1 [00:00<?, ?it/s]Initial thermalization: 100%|██████████| 1/1 [03:19<00:00, 199.42s/it]Initial thermalization: 100%|██████████| 1/1 [03:19<00:00, 199.44s/it]
+Using step size: 0.05
+Thermalizing:   0%|          | 0/1 [00:00<?, ?it/s]Thermalizing: 100%|██████████| 1/1 [00:39<00:00, 39.46s/it]Thermalizing: 100%|██████████| 1/1 [00:39<00:00, 39.46s/it]
+>>> Thermalization with field transformation completed in 238.91 seconds
+>>> Starting simulation with field transformation...
+Running HMC:   0%|          | 0/100 [00:00<?, ?it/s]Running HMC:   1%|          | 1/100 [00:15<24:59, 15.15s/it]Running HMC:   2%|▏         | 2/100 [00:29<24:13, 14.83s/it]Running HMC:   3%|▎         | 3/100 [00:44<23:34, 14.59s/it]Running HMC:   4%|▍         | 4/100 [00:57<22:50, 14.27s/it]Running HMC:   5%|▌         | 5/100 [01:11<22:13, 14.04s/it]Running HMC:   6%|▌         | 6/100 [01:26<22:20, 14.26s/it]Running HMC:   7%|▋         | 7/100 [01:41<22:43, 14.66s/it]Running HMC:   8%|▊         | 8/100 [01:55<22:00, 14.35s/it]Running HMC:   9%|▉         | 9/100 [02:10<22:09, 14.61s/it]

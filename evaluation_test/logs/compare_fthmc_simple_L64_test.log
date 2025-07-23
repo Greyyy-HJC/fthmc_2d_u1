@@ -1,0 +1,129 @@
+ 
+>>> PBS_NODEFILE content:
+sophia-gpu-07.lab.alcf.anl.gov
+1n*1t
+Wed Jul 23 01:31:12 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.127.05             Driver Version: 550.127.05     CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          Off |   00000000:B7:00.0 Off |                    0 |
+| N/A   26C    P0             53W /  400W |       1MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Thu_Mar_28_02:18:24_PDT_2024
+Cuda compilation tools, release 12.4, V12.4.131
+Build cuda_12.4.r12.4/compiler.34097967_0
+Start time: 2025-07-23 01:31:12
+Python 3.9.18
+Python path: /lus/eagle/projects/fthmc/software/ml/bin/python
+PYTHONPATH: /eagle/fthmc/run
+============================================================
+>>> Arguments:
+Lattice size: 64
+Number of configurations: 100
+Beta: 6.0
+Training beta: 4.0
+Step size: 0.06
+FT step size: 0.05
+Max lag: 200
+Random seed: 2008
+Model tag: simple
+Save tag: simple_test
+Device: cuda
+============================================================
+>>> Neural Network Field Transformation HMC Simulation: 
+Trying to use torch.compile for optimized computation...
+Successfully initialized torch.compile
+>>> Loading trained model
+Error loading model: [Errno 2] No such file or directory: '../models/best_model_opt_L64_train_beta4.0_simple_test.pt'
+>>> Error loading model: [Errno 2] No such file or directory: '../models/best_model_opt_L64_train_beta4.0_simple_test.pt'
+Traceback (most recent call last):
+  File "/lus/eagle/projects/fthmc/run/fthmc_2d_u1/evaluation_test/compare_fthmc.py", line 89, in <module>
+    nn_ft._load_best_model(train_beta)
+  File "/eagle/fthmc/run/fthmc_2d_u1/utils/field_trans.py", line 740, in _load_best_model
+    checkpoint = torch.load(checkpoint_path, map_location=self.device, weights_only=False)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/serialization.py", line 1319, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/serialization.py", line 659, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/serialization.py", line 640, in __init__
+    super().__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: '../models/best_model_opt_L64_train_beta4.0_simple_test.pt'
+End time: 2025-07-23 01:31:20
+Total time: 0h 0m 8s
+ 
+>>> PBS_NODEFILE content:
+sophia-gpu-07.lab.alcf.anl.gov
+1n*1t
+Wed Jul 23 01:32:27 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.127.05             Driver Version: 550.127.05     CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          Off |   00000000:87:00.0 Off |                    0 |
+| N/A   39C    P0             53W /  400W |       1MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Thu_Mar_28_02:18:24_PDT_2024
+Cuda compilation tools, release 12.4, V12.4.131
+Build cuda_12.4.r12.4/compiler.34097967_0
+Start time: 2025-07-23 01:32:28
+Python 3.9.18
+Python path: /lus/eagle/projects/fthmc/software/ml/bin/python
+PYTHONPATH: /eagle/fthmc/run
+============================================================
+>>> Arguments:
+Lattice size: 64
+Number of configurations: 100
+Beta: 6.0
+Training beta: 4.0
+Step size: 0.06
+FT step size: 0.05
+Max lag: 200
+Random seed: 2008
+Model tag: simple
+Save tag: simple
+Device: cuda
+============================================================
+>>> Neural Network Field Transformation HMC Simulation: 
+Trying to use torch.compile for optimized computation...
+Successfully initialized torch.compile
+>>> Loading trained model
+Loaded best models from epoch 32 with loss 39.772163
+>>> Model loaded successfully in 0.03 seconds
+Successfully compiled HMC functions with torch.compile
+>>> Starting thermalization with field transformation...
+>>> Initial thermalization...
+Initial thermalization:   0%|          | 0/10 [00:00<?, ?it/s]Initial thermalization:  10%|█         | 1/10 [01:44<15:43, 104.86s/it]Initial thermalization:  20%|██        | 2/10 [01:52<06:19, 47.40s/it] Initial thermalization:  30%|███       | 3/10 [01:59<03:23, 29.01s/it]Initial thermalization:  40%|████      | 4/10 [02:06<02:02, 20.37s/it]Initial thermalization:  50%|█████     | 5/10 [02:13<01:17, 15.58s/it]Initial thermalization:  60%|██████    | 6/10 [02:20<00:50, 12.70s/it]Initial thermalization:  70%|███████   | 7/10 [02:27<00:32, 10.88s/it]Initial thermalization:  80%|████████  | 8/10 [02:34<00:19,  9.67s/it]Initial thermalization:  90%|█████████ | 9/10 [02:41<00:08,  8.86s/it]Initial thermalization: 100%|██████████| 10/10 [02:48<00:00,  8.31s/it]Initial thermalization: 100%|██████████| 10/10 [02:48<00:00, 16.89s/it]
+Using step size: 0.05
+Thermalizing:   0%|          | 0/10 [00:00<?, ?it/s]Thermalizing:  10%|█         | 1/10 [00:10<01:31, 10.16s/it]Thermalizing:  20%|██        | 2/10 [00:17<01:07,  8.38s/it]Thermalizing:  30%|███       | 3/10 [00:24<00:54,  7.80s/it]Thermalizing:  40%|████      | 4/10 [00:31<00:45,  7.54s/it]Thermalizing:  50%|█████     | 5/10 [00:38<00:36,  7.39s/it]Thermalizing:  60%|██████    | 6/10 [00:45<00:29,  7.30s/it]Thermalizing:  70%|███████   | 7/10 [00:52<00:21,  7.25s/it]Thermalizing:  80%|████████  | 8/10 [01:00<00:14,  7.21s/it]Thermalizing:  90%|█████████ | 9/10 [01:07<00:07,  7.13s/it]Thermalizing: 100%|██████████| 10/10 [01:13<00:00,  7.08s/it]Thermalizing: 100%|██████████| 10/10 [01:13<00:00,  7.40s/it]
+>>> Thermalization with field transformation completed in 242.86 seconds
+>>> Starting simulation with field transformation...
+Running HMC:   0%|          | 0/100 [00:00<?, ?it/s]Running HMC:   1%|          | 1/100 [00:06<11:26,  6.93s/it]Running HMC:   2%|▏         | 2/100 [00:13<11:22,  6.97s/it]Running HMC:   3%|▎         | 3/100 [00:20<11:15,  6.97s/it]Running HMC:   4%|▍         | 4/100 [00:27<11:09,  6.97s/it]Running HMC:   5%|▌         | 5/100 [00:34<11:02,  6.97s/it]Running HMC:   6%|▌         | 6/100 [00:41<10:55,  6.98s/it]Running HMC:   7%|▋         | 7/100 [00:48<10:49,  6.98s/it]Running HMC:   8%|▊         | 8/100 [00:55<10:42,  6.98s/it]Running HMC:   9%|▉         | 9/100 [01:02<10:35,  6.99s/it]Running HMC:  10%|█         | 10/100 [01:09<10:29,  6.99s/it]Running HMC:  11%|█         | 11/100 [01:16<10:22,  6.99s/it]Running HMC:  12%|█▏        | 12/100 [01:23<10:15,  6.99s/it]Running HMC:  13%|█▎        | 13/100 [01:30<10:09,  7.00s/it]Running HMC:  14%|█▍        | 14/100 [01:37<10:02,  7.01s/it]Running HMC:  15%|█▌        | 15/100 [01:44<09:56,  7.01s/it]Running HMC:  16%|█▌        | 16/100 [01:51<09:49,  7.02s/it]Running HMC:  17%|█▋        | 17/100 [01:58<09:42,  7.02s/it]Running HMC:  18%|█▊        | 18/100 [02:05<09:36,  7.03s/it]Running HMC:  19%|█▉        | 19/100 [02:12<09:29,  7.03s/it]Running HMC:  20%|██        | 20/100 [02:20<09:22,  7.03s/it]Running HMC:  21%|██        | 21/100 [02:27<09:15,  7.04s/it]Running HMC:  22%|██▏       | 22/100 [02:34<09:08,  7.04s/it]Running HMC:  23%|██▎       | 23/100 [02:41<09:02,  7.04s/it]Running HMC:  24%|██▍       | 24/100 [02:48<08:55,  7.04s/it]Running HMC:  25%|██▌       | 25/100 [02:55<08:48,  7.05s/it]Running HMC:  26%|██▌       | 26/100 [03:03<09:00,  7.31s/it]Running HMC:  27%|██▋       | 27/100 [03:11<09:12,  7.58s/it]Running HMC:  28%|██▊       | 28/100 [03:20<09:30,  7.92s/it]Running HMC:  29%|██▉       | 29/100 [03:27<09:04,  7.67s/it]Running HMC:  30%|███       | 30/100 [03:34<08:44,  7.49s/it]Running HMC:  31%|███       | 31/100 [03:41<08:27,  7.36s/it]Running HMC:  32%|███▏      | 32/100 [03:48<08:14,  7.28s/it]Running HMC:  33%|███▎      | 33/100 [03:55<08:03,  7.21s/it]Running HMC:  34%|███▍      | 34/100 [04:02<07:53,  7.17s/it]Running HMC:  35%|███▌      | 35/100 [04:09<07:43,  7.14s/it]Running HMC:  36%|███▌      | 36/100 [04:16<07:35,  7.11s/it]Running HMC:  37%|███▋      | 37/100 [04:23<07:27,  7.10s/it]Running HMC:  38%|███▊      | 38/100 [04:30<07:19,  7.09s/it]Running HMC:  39%|███▉      | 39/100 [04:37<07:12,  7.10s/it]Running HMC:  40%|████      | 40/100 [04:44<07:05,  7.09s/it]Running HMC:  41%|████      | 41/100 [04:52<06:58,  7.10s/it]Running HMC:  42%|████▏     | 42/100 [04:59<06:51,  7.10s/it]Running HMC:  43%|████▎     | 43/100 [05:06<06:44,  7.10s/it]Running HMC:  44%|████▍     | 44/100 [05:13<06:38,  7.11s/it]Running HMC:  45%|████▌     | 45/100 [05:20<06:31,  7.11s/it]Running HMC:  46%|████▌     | 46/100 [05:27<06:24,  7.12s/it]Running HMC:  47%|████▋     | 47/100 [05:34<06:17,  7.12s/it]Running HMC:  48%|████▊     | 48/100 [05:41<06:10,  7.12s/it]Running HMC:  49%|████▉     | 49/100 [05:49<06:02,  7.11s/it]=>> PBS: job killed: walltime 602 exceeded limit 600

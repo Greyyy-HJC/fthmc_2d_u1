@@ -1,0 +1,62 @@
+ 
+>>> PBS_NODEFILE content:
+sophia-gpu-07.lab.alcf.anl.gov
+1n*1t
+Wed Jul 23 02:57:09 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.127.05             Driver Version: 550.127.05     CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          Off |   00000000:07:00.0 Off |                    0 |
+| N/A   22C    P0             54W /  400W |       1MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Thu_Mar_28_02:18:24_PDT_2024
+Cuda compilation tools, release 12.4, V12.4.131
+Build cuda_12.4.r12.4/compiler.34097967_0
+Start time: 2025-07-23 02:57:10
+Python 3.9.18
+Python path: /lus/eagle/projects/fthmc/software/ml/bin/python
+PYTHONPATH: /eagle/fthmc/run
+============================================================
+>>> Arguments:
+Lattice size: 64
+Number of configurations: 100
+Beta: 6.0
+Training beta: 4.0
+Step size: 0.06
+FT step size: 0.05
+Max lag: 200
+Random seed: 2008
+Model tag: simple
+Save tag: simple
+Device: cuda
+============================================================
+>>> Neural Network Field Transformation HMC Simulation: 
+Trying to use torch.compile for optimized computation...
+Successfully initialized torch.compile
+>>> Loading trained model
+Loaded best models from epoch 32 with loss 39.772163
+>>> Model loaded successfully in 0.06 seconds
+Successfully compiled HMC functions with torch.compile
+>>> Starting thermalization with field transformation...
+>>> Initial thermalization...
+Initial thermalization:   0%|          | 0/1 [00:00<?, ?it/s]Initial thermalization: 100%|██████████| 1/1 [01:45<00:00, 105.70s/it]Initial thermalization: 100%|██████████| 1/1 [01:45<00:00, 105.74s/it]
+Using step size: 0.05
+Thermalizing:   0%|          | 0/1 [00:00<?, ?it/s]Thermalizing: 100%|██████████| 1/1 [00:07<00:00,  7.49s/it]Thermalizing: 100%|██████████| 1/1 [00:07<00:00,  7.49s/it]
+>>> Thermalization with field transformation completed in 113.24 seconds
+>>> Starting simulation with field transformation...
+Running HMC:   0%|          | 0/100 [00:00<?, ?it/s]Running HMC:   1%|          | 1/100 [00:07<11:33,  7.01s/it]Running HMC:   2%|▏         | 2/100 [00:11<08:56,  5.48s/it]Running HMC:   3%|▎         | 3/100 [00:16<08:12,  5.07s/it]Running HMC:   4%|▍         | 4/100 [00:20<07:41,  4.81s/it]Running HMC:   5%|▌         | 5/100 [00:24<07:23,  4.67s/it]Running HMC:   6%|▌         | 6/100 [00:29<07:15,  4.63s/it]Running HMC:   7%|▋         | 7/100 [00:33<07:02,  4.54s/it]Running HMC:   8%|▊         | 8/100 [00:38<06:53,  4.49s/it]Running HMC:   9%|▉         | 9/100 [00:42<06:45,  4.45s/it]Running HMC:  10%|█         | 10/100 [00:46<06:38,  4.42s/it]Running HMC:  11%|█         | 11/100 [00:51<06:32,  4.41s/it]Running HMC:  12%|█▏        | 12/100 [00:55<06:27,  4.40s/it]Running HMC:  13%|█▎        | 13/100 [01:00<06:26,  4.45s/it]Running HMC:  14%|█▍        | 14/100 [01:04<06:22,  4.44s/it]Running HMC:  15%|█▌        | 15/100 [01:09<06:17,  4.44s/it]Running HMC:  16%|█▌        | 16/100 [01:13<06:13,  4.44s/it]Running HMC:  17%|█▋        | 17/100 [01:17<06:08,  4.43s/it]Running HMC:  18%|█▊        | 18/100 [01:22<06:07,  4.48s/it]Running HMC:  19%|█▉        | 19/100 [01:26<06:00,  4.45s/it]Running HMC:  20%|██        | 20/100 [01:31<05:54,  4.44s/it]Running HMC:  21%|██        | 21/100 [01:35<05:49,  4.43s/it]Running HMC:  22%|██▏       | 22/100 [01:40<05:45,  4.43s/it]Running HMC:  23%|██▎       | 23/100 [01:44<05:40,  4.42s/it]Running HMC:  24%|██▍       | 24/100 [01:48<05:36,  4.43s/it]Running HMC:  25%|██▌       | 25/100 [01:53<05:32,  4.43s/it]Running HMC:  26%|██▌       | 26/100 [01:57<05:27,  4.42s/it]Running HMC:  27%|██▋       | 27/100 [02:02<05:26,  4.47s/it]Running HMC:  28%|██▊       | 28/100 [02:06<05:20,  4.45s/it]Running HMC:  29%|██▉       | 29/100 [02:11<05:14,  4.43s/it]Running HMC:  30%|███       | 30/100 [02:15<05:09,  4.42s/it]Running HMC:  31%|███       | 31/100 [02:19<05:04,  4.41s/it]Running HMC:  32%|███▏      | 32/100 [02:24<05:00,  4.41s/it]Running HMC:  33%|███▎      | 33/100 [02:28<04:55,  4.41s/it]Running HMC:  34%|███▍      | 34/100 [02:33<04:51,  4.42s/it]Running HMC:  35%|███▌      | 35/100 [02:37<04:46,  4.41s/it]Running HMC:  36%|███▌      | 36/100 [02:42<04:42,  4.41s/it]Running HMC:  37%|███▋      | 37/100 [02:46<04:37,  4.41s/it]Running HMC:  38%|███▊      | 38/100 [02:50<04:33,  4.41s/it]Running HMC:  39%|███▉      | 39/100 [02:55<04:28,  4.41s/it]Running HMC:  40%|████      | 40/100 [02:59<04:24,  4.41s/it]Running HMC:  41%|████      | 41/100 [03:04<04:19,  4.41s/it]Running HMC:  42%|████▏     | 42/100 [03:08<04:15,  4.41s/it]Running HMC:  43%|████▎     | 43/100 [03:13<04:15,  4.48s/it]Running HMC:  44%|████▍     | 44/100 [03:17<04:09,  4.46s/it]Running HMC:  45%|████▌     | 45/100 [03:21<04:04,  4.45s/it]Running HMC:  46%|████▌     | 46/100 [03:26<04:00,  4.45s/it]Running HMC:  47%|████▋     | 47/100 [03:30<03:55,  4.44s/it]Running HMC:  48%|████▊     | 48/100 [03:35<03:51,  4.44s/it]Running HMC:  49%|████▉     | 49/100 [03:39<03:46,  4.44s/it]Running HMC:  50%|█████     | 50/100 [03:44<03:44,  4.49s/it]Running HMC:  51%|█████     | 51/100 [03:48<03:38,  4.46s/it]Running HMC:  52%|█████▏    | 52/100 [03:53<03:32,  4.44s/it]Running HMC:  53%|█████▎    | 53/100 [03:57<03:27,  4.42s/it]Running HMC:  54%|█████▍    | 54/100 [04:01<03:23,  4.42s/it]Running HMC:  55%|█████▌    | 55/100 [04:06<03:20,  4.46s/it]Running HMC:  56%|█████▌    | 56/100 [04:10<03:15,  4.44s/it]Running HMC:  57%|█████▋    | 57/100 [04:15<03:10,  4.42s/it]Running HMC:  58%|█████▊    | 58/100 [04:19<03:05,  4.42s/it]Running HMC:  59%|█████▉    | 59/100 [04:23<03:00,  4.41s/it]Running HMC:  60%|██████    | 60/100 [04:28<02:56,  4.40s/it]Running HMC:  61%|██████    | 61/100 [04:32<02:51,  4.39s/it]Running HMC:  62%|██████▏   | 62/100 [04:37<02:46,  4.39s/it]Running HMC:  63%|██████▎   | 63/100 [04:41<02:42,  4.39s/it]Running HMC:  64%|██████▍   | 64/100 [04:46<02:39,  4.43s/it]Running HMC:  65%|██████▌   | 65/100 [04:50<02:34,  4.41s/it]Running HMC:  66%|██████▌   | 66/100 [04:54<02:30,  4.41s/it]Running HMC:  67%|██████▋   | 67/100 [04:59<02:25,  4.40s/it]Running HMC:  68%|██████▊   | 68/100 [05:03<02:21,  4.43s/it]Running HMC:  69%|██████▉   | 69/100 [05:08<02:16,  4.41s/it]Running HMC:  70%|███████   | 70/100 [05:12<02:12,  4.40s/it]Running HMC:  71%|███████   | 71/100 [05:16<02:07,  4.39s/it]Running HMC:  72%|███████▏  | 72/100 [05:21<02:02,  4.38s/it]Running HMC:  73%|███████▎  | 73/100 [05:25<01:58,  4.38s/it]Running HMC:  74%|███████▍  | 74/100 [05:29<01:53,  4.38s/it]Running HMC:  75%|███████▌  | 75/100 [05:34<01:50,  4.42s/it]Running HMC:  76%|███████▌  | 76/100 [05:38<01:45,  4.40s/it]Running HMC:  77%|███████▋  | 77/100 [05:43<01:40,  4.39s/it]

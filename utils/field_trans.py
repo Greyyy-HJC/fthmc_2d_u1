@@ -20,16 +20,6 @@ torch_logger.setLevel(logging.ERROR)  # Only show error level logs
 torch_logger.propagate = False
 
 
-#TODO: test
-activations = {}
-def get_activation(name):
-    def hook(model, input, output):
-        # Only keep tensor, do not compute gradient
-        activations[name] = output.detach()
-    return hook
-#TODO
-
-
 from fthmc_2d_u1.utils.func import plaq_from_field_batch, rect_from_field_batch, get_field_mask, get_plaq_mask, get_rect_mask
 from fthmc_2d_u1.utils.cnn_models import choose_cnn_model
 
@@ -74,13 +64,6 @@ class FieldTransformation:
             self.models.append(model)
             self.optimizers.append(optimizer)
             
-        #TODO: test
-        for i, model in enumerate(self.models):
-            for name, module in model.named_modules():
-                if isinstance(module, nn.Conv2d):
-                    module.register_forward_hook(get_activation(f'model_{i}_{name}'))
-        #TODO
-        
         self.schedulers = [
             torch.optim.lr_scheduler.ReduceLROnPlateau(
                 optimizer, mode='min', factor=0.5, patience=5
@@ -98,7 +81,7 @@ class FieldTransformation:
                 # Only compile compute-intensive functions with safer backend option
                 # Use 'eager' backend and configure for minimal logs
                 compile_options = {
-                    "backend": "eager",     # Simple backend, avoid C++ compilation errors
+                    "backend": "inductor",     # Simple backend, avoid C++ compilation errors
                     "fullgraph": False,     # Do not require full graph compilation
                     "dynamic": True,        # Allow dynamic shapes, reduce recompilation warnings
                 }
@@ -486,25 +469,9 @@ class FieldTransformation:
         """Perform a single training step for all subsets together"""
         theta_ori = theta_ori.to(self.device)
         
-        #TODO: test
-        batch_stats = {
-            "input_mean": theta_ori.mean().item(),
-            "input_std":  theta_ori.std().item(),
-            "acts": {},         # layer activation std
-            "grads": {}         # parameter grad norm
-        }
-        #TODO
-        
         with torch.autograd.set_grad_enabled(True):
             # Compute loss
             loss = self.loss_fn(theta_ori)
-            
-            #TODO: test
-            acts_copy = activations.copy()
-            activations.clear()
-            for lname, feat in acts_copy.items():
-                batch_stats["acts"][lname] = feat.std().item()
-            #TODO
             
             # Zero all gradients
             self._zero_all_grads()
@@ -512,19 +479,10 @@ class FieldTransformation:
             # Backpropagate
             self.backward(loss)
             
-            #TODO: test
-            for i, model in enumerate(self.models):
-                for pname, p in model.named_parameters():
-                    if p.grad is not None:
-                        batch_stats["grads"][f"model_{i}_{pname}"] = p.grad.norm().item()
-                    else:
-                        batch_stats["grads"][f"model_{i}_{pname}"] = 0.000
-            #TODO
-            
             # Update all models
             self._step_all_optimizers()
             
-        return loss.item(), batch_stats
+        return loss.item()
     
     def _zero_all_grads(self):
         """Zero gradients for all optimizers"""
@@ -590,41 +548,14 @@ class FieldTransformation:
             # Training phase
             self._set_models_mode(True)  # Set models to training mode
             
-            #TODO: test
-            epoch_input_stds = []
-            epoch_act_stds = {} # layer_name -> [std1, std2, ...]
-            epoch_grad_norms = {} # model_i_pname -> [norm1, norm2, ...]
-            #TODO
-            
             epoch_losses = []
             
             for batch in tqdm(train_loader, desc=f"Epoch {epoch+1}/{n_epochs}"):
-                # loss = self.train_step(batch)
-                # epoch_losses.append(loss)
-                
-                #TODO: test
-                loss, batch_stats = self.train_step(batch)
+                loss = self.train_step(batch)
                 epoch_losses.append(loss)
-                
-                epoch_input_stds.append(batch_stats["input_std"])
-                for lname, std in batch_stats["acts"].items():
-                    epoch_act_stds.setdefault(lname, []).append(std)
-                for pname, norm in batch_stats["grads"].items():
-                    epoch_grad_norms.setdefault(pname, []).append(norm)
-                #TODO
                 
             train_loss = np.mean(epoch_losses)
             train_losses.append(train_loss)
-            
-            #TODO: test
-            self.print(f"\n[β={train_beta}] Epoch {epoch+1} summary:")
-            self.print(f"  input  std: mean={np.mean(epoch_input_stds):.3e}")
-            for lname, stds in epoch_act_stds.items():
-                self.print(f"  layer {lname:20s} act-std: mean={np.mean(stds):.3e}")
-            for pname, norms in epoch_grad_norms.items():
-                # only print common layers, too many will be truncated
-                self.print(f"  param {pname:30s} grad-norm: mean={np.mean(norms):.3e}")
-            #TODO
             
             # Evaluation phase
             self._set_models_mode(False)  # Set models to evaluation mode

@@ -256,17 +256,22 @@ class jointCNN_rnet_norm(nn.Module):
 
 
 
+########################################################################################·
+# Below are test models
+
+
+
 class ImprovedResBlock(nn.Module):
-    """改进的ResNet块，具备更好的稳定性"""
+    """Improved ResNet block with better stability"""
     def __init__(self, channels, kernel_size=(3, 3), dropout_rate=0.1):
         super().__init__()
         
-        # Pre-normalization设计，提高训练稳定性
+        # Pre-normalization design for improved training stability
         self.norm1 = nn.GroupNorm(min(8, channels//4), channels)
         self.conv1 = nn.Conv2d(
             channels, channels, kernel_size,
             padding='same', padding_mode='circular',
-            bias=False  # 使用GroupNorm时不需要bias
+            bias=False  # No bias needed when using GroupNorm
         )
         
         self.norm2 = nn.GroupNorm(min(8, channels//4), channels)
@@ -276,19 +281,19 @@ class ImprovedResBlock(nn.Module):
             bias=False
         )
         
-        # 使用Swish激活函数，比GELU更稳定
+        # Use Swish activation function, more stable than GELU
         self.activation = nn.SiLU()  # Swish activation
         
         # Dropout for regularization
         self.dropout = nn.Dropout2d(dropout_rate)
         
-        # 可学习的残差连接权重
+        # Learnable residual connection weight
         self.alpha = nn.Parameter(torch.ones(1) * 0.1)
         
     def forward(self, x):
         identity = x
         
-        # Pre-norm设计
+        # Pre-norm design
         out = self.norm1(x)
         out = self.activation(out)
         out = self.conv1(out)
@@ -298,13 +303,13 @@ class ImprovedResBlock(nn.Module):
         out = self.dropout(out)
         out = self.conv2(out)
         
-        # 可学习的残差连接
+        # Learnable residual connection
         out = identity + self.alpha * out
         
         return out
 
 class AttentionGate(nn.Module):
-    """简单的注意力机制，提高模型表达能力"""
+    """Simple attention mechanism to improve model expressiveness"""
     def __init__(self, channels):
         super().__init__()
         self.conv = nn.Conv2d(channels, channels, 1)
@@ -316,29 +321,29 @@ class AttentionGate(nn.Module):
         return x * attention
 
 class ImprovedJointCNN(nn.Module):
-    """改进的Joint CNN架构"""
+    """Improved Joint CNN architecture"""
     def __init__(self, 
                  plaq_input_channels=2, 
                  rect_input_channels=4, 
                  plaq_output_channels=4, 
                  rect_output_channels=8,
-                 hidden_channels=24,  # 减少通道数避免过拟合
-                 num_res_blocks=4,    # 增加深度但用更稳定的块
+                 hidden_channels=24,  # Reduce channels to avoid overfitting
+                 num_res_blocks=4,    # Increase depth with more stable blocks
                  dropout_rate=0.15,
                  kernel_size=(3, 3)):
         super().__init__()
         
         combined_input_channels = plaq_input_channels + rect_input_channels
         
-        # 初始投影层
+        # Initial projection layer
         self.input_proj = nn.Sequential(
             nn.Conv2d(combined_input_channels, hidden_channels, 1),
             nn.GroupNorm(min(8, hidden_channels//4), hidden_channels),
             nn.SiLU()
         )
         
-        # 多尺度特征提取 - 修复通道数整除问题
-        ms_channels = hidden_channels // 4  # 确保能被4整除，每个分支8个通道
+        # Multi-scale feature extraction - fix channel divisibility issue
+        ms_channels = hidden_channels // 4  # Ensure divisible by 4, 8 channels per branch
         self.multi_scale_conv = nn.ModuleList([
             nn.Conv2d(hidden_channels, ms_channels, (3, 3), 
                      padding='same', padding_mode='circular'),
@@ -347,41 +352,41 @@ class ImprovedJointCNN(nn.Module):
             nn.Conv2d(hidden_channels, ms_channels, (7, 7), 
                      padding='same', padding_mode='circular')
         ])
-        # 添加一个1x1卷积来调整通道数到期望值
+        # Add 1x1 conv to adjust channels back to expected value
         self.channel_adjust = nn.Conv2d(ms_channels * 3, hidden_channels, 1)
         
-        # ResNet主干
+        # ResNet backbone
         self.res_blocks = nn.ModuleList([
             ImprovedResBlock(hidden_channels, kernel_size, dropout_rate)
             for _ in range(num_res_blocks)
         ])
         
-        # 注意力机制
+        # Attention mechanism
         self.attention_gates = nn.ModuleList([
             AttentionGate(hidden_channels)
             for _ in range(num_res_blocks//2)
         ])
         
-        # 输出投影层
+        # Output projection layer
         self.output_norm = nn.GroupNorm(min(8, hidden_channels//4), hidden_channels)
         self.output_conv = nn.Conv2d(
             hidden_channels, 
             plaq_output_channels + rect_output_channels,
-            1,  # 使用1x1卷积减少参数
+            1,  # Use 1x1 conv to reduce parameters
             bias=True
         )
         
-        # 输出缩放参数，控制变换幅度
+        # Output scaling parameter to control transformation amplitude
         self.output_scale = nn.Parameter(torch.ones(1) * 0.05)
         
-        # 权重初始化
+        # Weight initialization
         self._initialize_weights()
         
     def _initialize_weights(self):
-        """改进的权重初始化"""
+        """Improved weight initialization"""
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
-                # 使用He初始化，适合ReLU族激活函数
+                # Use He initialization, suitable for ReLU family activation functions
                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
                 if m.bias is not None:
                     nn.init.constant_(m.bias, 0)
@@ -389,81 +394,238 @@ class ImprovedJointCNN(nn.Module):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
         
-        # 输出层使用小的初始化值
+        # Use small initialization values for output layer
         nn.init.normal_(self.output_conv.weight, std=0.01)
         if self.output_conv.bias is not None:
             nn.init.zeros_(self.output_conv.bias)
     
     def forward(self, plaq_features, rect_features):
-        # 合并输入特征
+        # Merge input features
         x = torch.cat([plaq_features, rect_features], dim=1)
         
-        # 初始投影
+        # Initial projection
         x = self.input_proj(x)
         
-        # 多尺度特征提取
+        # Multi-scale feature extraction
         ms_features = []
         for conv in self.multi_scale_conv:
             ms_features.append(conv(x))
         x = torch.cat(ms_features, dim=1)
-        x = self.channel_adjust(x)  # 调整回原来的通道数
+        x = self.channel_adjust(x)  # Adjust back to original channel count
         
-        # ResNet主干 + 注意力
+        # ResNet backbone + attention
         for i, res_block in enumerate(self.res_blocks):
             x = res_block(x)
-            # 每两个ResBlock后添加注意力
+            # Add attention after every two ResBlocks
             if i < len(self.attention_gates) and (i + 1) % 2 == 0:
                 x = self.attention_gates[i//2](x)
         
-        # 输出层
+        # Output layer
         x = self.output_norm(x)
         x = F.silu(x)
         x = self.output_conv(x)
         
-        # 控制输出幅度
-        x = self.output_scale * torch.tanh(x)  # 限制在[-output_scale, +output_scale]
+        # Control output amplitude
+        x = self.output_scale * torch.tanh(x)  # Limit to [-output_scale, +output_scale]
         
-        # 分离输出
+        # Separate outputs
+        plaq_coeffs = x[:, :4, :, :]
+        rect_coeffs = x[:, 4:, :, :]
+        
+        return plaq_coeffs, rect_coeffs
+
+class LightweightHybrid(nn.Module):
+    """Lightweight hybrid architecture: memory-friendly version"""
+    def __init__(self, 
+                 plaq_input_channels=2, 
+                 rect_input_channels=4, 
+                 plaq_output_channels=4, 
+                 rect_output_channels=8,
+                 hidden_channels=16,  # Significantly reduce channel count
+                 kernel_size=(3, 3)):
+        super().__init__()
+        
+        combined_input_channels = plaq_input_channels + rect_input_channels
+        
+        # Simple input projection
+        self.input_conv = nn.Conv2d(
+            combined_input_channels, 
+            hidden_channels, 
+            kernel_size,
+            padding='same', 
+            padding_mode='circular'
+        )
+        self.input_norm = nn.GroupNorm(4, hidden_channels)  # Fixed 4 groups
+        
+        # Lightweight ResNet blocks - only use 2
+        self.res_block1 = ResBlock(hidden_channels, kernel_size)
+        self.res_block2 = ResBlock(hidden_channels, kernel_size)
+        
+        # Simple channel attention (replace complex MultiheadAttention)
+        self.channel_attention = nn.Sequential(
+            nn.AdaptiveAvgPool2d(1),  # Global average pooling
+            nn.Conv2d(hidden_channels, hidden_channels // 4, 1),
+            nn.ReLU(),
+            nn.Conv2d(hidden_channels // 4, hidden_channels, 1),
+            nn.Sigmoid()
+        )
+        
+        # Output layer
+        self.output_conv = nn.Conv2d(
+            hidden_channels,
+            plaq_output_channels + rect_output_channels,
+            1,  # 1x1 convolution
+            bias=True
+        )
+        
+        # Initialize with small weights
+        self._init_small_weights()
+        
+    def _init_small_weights(self):
+        """Initialize small weights to produce near-identity transformation"""
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.normal_(m.weight, std=0.01)
+                if m.bias is not None:
+                    nn.init.zeros_(m.bias)
+            elif isinstance(m, nn.GroupNorm):
+                nn.init.ones_(m.weight)
+                nn.init.zeros_(m.bias)
+    
+    def forward(self, plaq_features, rect_features):
+        # Merge inputs
+        x = torch.cat([plaq_features, rect_features], dim=1)
+        
+        # Input processing
+        x = self.input_conv(x)
+        x = self.input_norm(x)
+        x = F.gelu(x)
+        
+        # ResNet blocks
+        x = self.res_block1(x)
+        x = self.res_block2(x)
+        
+        # Channel attention
+        attention = self.channel_attention(x)
+        x = x * attention
+        
+        # Output
+        x = self.output_conv(x)
+        x = torch.arctan(x) / torch.pi / 2  # Limit output range
+        
+        # Separate outputs
+        plaq_coeffs = x[:, :4, :, :]
+        rect_coeffs = x[:, 4:, :, :]
+        
+        return plaq_coeffs, rect_coeffs
+
+class StableHybrid(nn.Module):
+    """Stable hybrid architecture: memory-friendly but stronger than simple"""
+    def __init__(self, 
+                 plaq_input_channels=2, 
+                 rect_input_channels=4, 
+                 plaq_output_channels=4, 
+                 rect_output_channels=8,
+                 hidden_channels=14,  # Reduce channels but still more than simple's 12
+                 kernel_size=(3, 3)):
+        super().__init__()
+        
+        combined_input_channels = plaq_input_channels + rect_input_channels
+        
+        # Simplified input projection
+        self.input_conv = nn.Conv2d(
+            combined_input_channels, 
+            hidden_channels, 
+            kernel_size,
+            padding='same', 
+            padding_mode='circular'
+        )
+        self.input_norm = nn.GroupNorm(2, hidden_channels)  # Reduce groups
+        
+        # Only use 2 ResNet blocks, but with more stable design
+        self.res_block1 = ResBlock(hidden_channels, kernel_size)
+        self.res_block2 = ResBlock(hidden_channels, kernel_size)
+        
+        # Simplified channel attention
+        self.channel_attention = nn.Sequential(
+            nn.AdaptiveAvgPool2d(1),
+            nn.Conv2d(hidden_channels, max(2, hidden_channels // 4), 1),  # Conservative dimension reduction
+            nn.ReLU(),
+            nn.Conv2d(max(2, hidden_channels // 4), hidden_channels, 1),
+            nn.Sigmoid()
+        )
+        
+        # Output layer
+        self.output_conv = nn.Conv2d(
+            hidden_channels,
+            plaq_output_channels + rect_output_channels,
+            1,
+            bias=True
+        )
+        
+        # Learnable output scaling
+        self.output_scale = nn.Parameter(torch.ones(1) * 0.05)
+        
+        # Stable initialization
+        self._init_stable_weights()
+        
+    def _init_stable_weights(self):
+        """Stable weight initialization"""
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.xavier_normal_(m.weight, gain=0.8)  # Moderate gain
+                if m.bias is not None:
+                    nn.init.zeros_(m.bias)
+            elif isinstance(m, nn.GroupNorm):
+                nn.init.ones_(m.weight)
+                nn.init.zeros_(m.bias)
+        
+        # Small initialization for output layer
+        nn.init.normal_(self.output_conv.weight, std=0.01)
+        nn.init.zeros_(self.output_conv.bias)
+    
+    def forward(self, plaq_features, rect_features):
+        # Merge inputs
+        x = torch.cat([plaq_features, rect_features], dim=1)
+        
+        # Input processing
+        x = self.input_conv(x)
+        x = self.input_norm(x)
+        x = F.gelu(x)
+        
+        # ResNet blocks - add scaling factor for improved stability
+        identity1 = x
+        x = self.res_block1(x) * 0.3 + identity1  # Moderate scaling
+        
+        identity2 = x
+        x = self.res_block2(x) * 0.3 + identity2
+        
+        # Channel attention
+        attention = self.channel_attention(x)
+        x = x * attention
+        
+        # Output - progressive limiting
+        x = self.output_conv(x)
+        x = torch.tanh(x) * self.output_scale
+        
+        # Separate outputs
         plaq_coeffs = x[:, :4, :, :]
         rect_coeffs = x[:, 4:, :, :]
         
         return plaq_coeffs, rect_coeffs
 
 class HybridArchitecture(nn.Module):
-    """混合架构：结合CNN和Transformer"""
-    def __init__(self, base_channels=32):
+    """Hybrid architecture: combines CNN and Transformer (maintains compatibility, actually uses lightweight version)"""
+    def __init__(self, base_channels=16):  # Default reduced channel count
         super().__init__()
         
-        # CNN backbone
-        self.cnn_backbone = ImprovedJointCNN(
-            hidden_channels=base_channels,
-            num_res_blocks=3,
-            dropout_rate=0.1
+        # Use lightweight version
+        self.lightweight_model = LightweightHybrid(
+            hidden_channels=base_channels
         )
-        
-        # 简化的自注意力层
-        self.self_attention = nn.MultiheadAttention(
-            embed_dim=base_channels,
-            num_heads=4,
-            dropout=0.1,
-            batch_first=True
-        )
-        
-        # 最终输出层
-        self.final_conv = nn.Conv2d(base_channels, 12, 1)
         
     def forward(self, plaq_features, rect_features):
-        # CNN特征提取
-        plaq_coeffs, rect_coeffs = self.cnn_backbone(plaq_features, rect_features)
-        
-        # 为Transformer重塑特征
-        B, C, H, W = plaq_coeffs.shape
-        # 简化版：只在最后一层使用注意力
-        combined = torch.cat([plaq_coeffs, rect_coeffs], dim=1)  # [B, 12, H, W]
-        
-        return plaq_coeffs, rect_coeffs
-
-
+        return self.lightweight_model(plaq_features, rect_features)
 
 
 
@@ -476,5 +638,9 @@ def choose_cnn_model(model_tag):
         return jointCNN_rnet_norm
     elif model_tag == 'hybrid':
         return HybridArchitecture
+    elif model_tag == 'lightweight':
+        return LightweightHybrid
+    elif model_tag == 'stable':
+        return StableHybrid
     else:
         raise ValueError(f"Invalid model tag: {model_tag}")

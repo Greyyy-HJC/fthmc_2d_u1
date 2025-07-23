@@ -6,7 +6,7 @@ import argparse
 import time
 import datetime
 from fthmc_2d_u1.utils.func import set_seed
-from fthmc_2d_u1.utils.field_trans import FieldTransformation
+from fthmc_2d_u1.utils.field_trans_log import FieldTransformation
 from lightning.fabric import Fabric
 
 # Record program start time
