@@ -104,7 +104,7 @@ torch.set_float32_matmul_precision('high')
 
 # %%
 # initialize the field transformation
-nn_ft = FieldTransformation(lattice_size, device=device, n_subsets=args.n_subsets, if_check_jac=args.if_check_jac, num_workers=args.n_workers, identity_init=args.if_identity_init, model_tag=args.model_tag, save_tag=args.save_tag, fabric=fabric, backend='eager', superparams=superparams)
+nn_ft = FieldTransformation(lattice_size, device=device, n_subsets=args.n_subsets, if_check_jac=args.if_check_jac, num_workers=args.n_workers, identity_init=args.if_identity_init, model_tag=args.model_tag, save_tag=args.save_tag, fabric=fabric, backend='eager', input_superparams=superparams)
 
 if args.continue_beta is not None:
     continue_beta = args.continue_beta

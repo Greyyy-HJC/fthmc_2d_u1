@@ -25,7 +25,7 @@ from fthmc_2d_u1.utils.best_model import choose_cnn_model
 
 class FieldTransformation:
     """Neural network based field transformation"""
-    def __init__(self, lattice_size, device='cpu', n_subsets=8, if_check_jac=False, num_workers=0, identity_init=True, save_tag=None, model_tag='simple', fabric=None, backend='eager', superparams=None):
+    def __init__(self, lattice_size, device='cpu', n_subsets=8, if_check_jac=False, num_workers=0, identity_init=True, save_tag=None, model_tag='simple', fabric=None, backend='eager', input_superparams=None):
         self.L = lattice_size
         self.device = torch.device(device)
         self.n_subsets = n_subsets
@@ -49,8 +49,8 @@ class FieldTransformation:
         self.superparams['factor'] = 0.5
         self.superparams['patience'] = 5
         
-        if superparams is not None:
-            self.superparams.update(superparams)
+        if input_superparams is not None:
+            self.superparams.update(input_superparams)
         
         # Create n_subsets independent models for each subset
         cnn_model = choose_cnn_model(model_tag)
@@ -61,10 +61,10 @@ class FieldTransformation:
             for model in raw_models:
                 # Initialize all weights to a small non-zero value
                 for param in model.parameters():
-                    nn.init.normal_(param, mean=0.0, std=superparams['init_std'])
+                    nn.init.normal_(param, mean=0.0, std=self.superparams['init_std'])
         
         raw_optimizers = [
-            torch.optim.AdamW(model.parameters(), lr=superparams['lr'], weight_decay=superparams['weight_decay'], betas=superparams['betas'], eps=superparams['eps'])
+            torch.optim.AdamW(model.parameters(), lr=self.superparams['lr'], weight_decay=self.superparams['weight_decay'], betas=self.superparams['betas'], eps=self.superparams['eps'])
             for model in raw_models
         ]
         
@@ -79,7 +79,7 @@ class FieldTransformation:
             
         self.schedulers = [
             torch.optim.lr_scheduler.ReduceLROnPlateau(
-                optimizer, mode='min', factor=superparams['factor'], patience=superparams['patience']
+                optimizer, mode='min', factor=self.superparams['factor'], patience=self.    superparams['patience']
             )
             for optimizer in self.optimizers
         ]

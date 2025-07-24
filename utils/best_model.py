@@ -17,8 +17,10 @@ class NetConfig:
     
     
 class LocalNet(nn.Module):
-    def __init__(self, config: NetConfig):
+    def __init__(self):
         super().__init__()
+        config = NetConfig()
+            
         # Combined input channels for plaq and rect features
         combined_input_channels = config.plaq_input_channels + config.rect_input_channels
 
@@ -67,10 +69,10 @@ class LocalNet(nn.Module):
  
 
 class LocalResAttnNet(nn.Module):
-    def __init__(self, 
-                 config: NetConfig):
+    def __init__(self):
         super().__init__()
-
+        config = NetConfig()
+        
         combined_input_channels = config.plaq_input_channels + config.rect_input_channels
 
         # Input projection

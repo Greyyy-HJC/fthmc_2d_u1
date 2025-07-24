@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#PBS -N train
+#PBS -N tune
 #PBS -A fthmc
 #PBS -l select=2
 #PBS -l filesystems=home:eagle
@@ -45,9 +45,9 @@ export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128,expandable_segments:True
 
 # run train.py
 torchrun --standalone --nproc_per_node=2 train.py \
-    --lattice_size 32 --min_beta 2.0 --max_beta 2.0 --beta_gap 1.0 \
+    --lattice_size 64 --min_beta 2.0 --max_beta 2.0 --beta_gap 1.0 \
     --n_epochs 32 --batch_size 32 --n_subsets 8 --n_workers 0 \
-    --model_tag 'rsat' --save_tag 'rsat_L32' --rand_seed 2008 --if_identity_init \
+    --model_tag 'rsat' --save_tag 'rsat_L64_lr0.001_wd0.0001_init0.001' --rand_seed 2008 --if_identity_init \
     # --continue_beta 2.0 \
     --lr 0.001 --weight_decay 0.0001 --init_std 0.001
 
