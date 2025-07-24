@@ -6,8 +6,8 @@
 #PBS -l filesystems=home:eagle
 #PBS -q by-gpu
 #PBS -j oe
-#PBS -l walltime=0:10:00
-#PBS -o /eagle/fthmc/run/fthmc_2d_u1/gauge_gen/logs/gen_L64_b2.5-b5.5.log
+#PBS -l walltime=24:00:00
+#PBS -o /eagle/fthmc/run/fthmc_2d_u1/gauge_gen/logs/gen_L32_b2-b6.log
 
 # switch to the submit directory
 WORKDIR=/eagle/fthmc/run/fthmc_2d_u1/gauge_gen
@@ -42,13 +42,15 @@ echo "PYTHONPATH: $PYTHONPATH"
 
 
 # run conf_gen.py
-python conf_gen.py --lattice_size 64 --beta 2.5 --n_thermalization 600 --store_interval 30 --n_configs 2
+python conf_gen.py --lattice_size 32 --beta 2.0 --n_thermalization 600 --store_interval 20 --n_configs 4096
 
-# python conf_gen.py --lattice_size 64 --beta 3.5 --n_thermalization 600 --store_interval 30 --n_configs 4096
+python conf_gen.py --lattice_size 32 --beta 3.0 --n_thermalization 600 --store_interval 20 --n_configs 4096
 
-# python conf_gen.py --lattice_size 64 --beta 4.5 --n_thermalization 600 --store_interval 40 --n_configs 4096
+python conf_gen.py --lattice_size 32 --beta 4.0 --n_thermalization 600 --store_interval 30 --n_configs 4096
 
-# python conf_gen.py --lattice_size 64 --beta 5.5 --n_thermalization 600 --store_interval 40 --n_configs 4096
+python conf_gen.py --lattice_size 32 --beta 5.0 --n_thermalization 600 --store_interval 30 --n_configs 4096
+
+python conf_gen.py --lattice_size 32 --beta 6.0 --n_thermalization 600 --store_interval 40 --n_configs 4096
 
 # calculate total time
 end_time=$(date +"%Y-%m-%d %H:%M:%S")

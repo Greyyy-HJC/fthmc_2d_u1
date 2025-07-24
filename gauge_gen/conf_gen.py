@@ -26,7 +26,7 @@ volume = lattice_size ** 2
 beta = args.beta
 n_thermalization_steps = args.n_thermalization
 n_steps = 50
-step_size = 0.1
+step_size = 0.15
 store_interval = args.store_interval
 n_iterations = store_interval * args.n_configs
 
