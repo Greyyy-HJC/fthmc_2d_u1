@@ -4,12 +4,12 @@
 # os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True'
 
 import os
-# ---- CUDA allocator & launch config（必须在 import torch 之前）----
+# ---- CUDA allocator & launch config (must be set before importing torch) ----
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 os.environ.setdefault("CUDA_LAUNCH_BLOCKING", "0")
 
 import torch
-# ---- 数值精度相关：允许 TF32、提高 matmul 精度（torch>=2.1）----
+# ---- Allow TF32, improve matmul precision (torch>=2.1) ----
 torch.backends.cuda.matmul.allow_tf32 = True
 try:
     torch.set_float32_matmul_precision("high")
@@ -20,7 +20,7 @@ except AttributeError:
 import time
 import argparse
 from fthmc_2d_u1.evaluation_test.hmc_u1_ft import HMC_U1_FT
-from fthmc_2d_u1.evaluation_test.field_trans import FieldTransformation
+from fthmc_2d_u1.utils.field_trans_tune import FieldTransformation
 from fthmc_2d_u1.utils.func import hmc_summary, set_seed
 
 parser = argparse.ArgumentParser(description='Parameters for Comparison')
@@ -61,7 +61,7 @@ set_seed(args.rand_seed)
 lattice_size = args.lattice_size
 volume = lattice_size ** 2
 beta = args.beta
-n_thermalization_steps = 1
+n_thermalization_steps = 200
 n_steps = 50
 step_size = args.step_size
 store_interval = 1
@@ -80,7 +80,6 @@ device = args.device
 
 # Set default type
 torch.set_default_dtype(torch.float32)
-#TODO: optimize the performance
 torch.set_float32_matmul_precision('high')
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
@@ -93,7 +92,7 @@ print(">>> Neural Network Field Transformation HMC Simulation: ")
 # initialize the field transformation
 n_subsets = 8
 n_workers = 0 # * n_workers = 0 is faster
-nn_ft = FieldTransformation(lattice_size, device=device, n_subsets=n_subsets, if_check_jac=False, num_workers=n_workers, identity_init=True, model_tag=args.model_tag, save_tag=args.save_tag)
+nn_ft = FieldTransformation(lattice_size, device=device, n_subsets=n_subsets, if_check_jac=False, num_workers=n_workers, identity_init=True, save_tag=args.save_tag, model_tag=args.model_tag, backend='inductor')
 
 # Load the trained model using the _load_best_model method
 model_load_start_time = time.time()
@@ -127,18 +126,7 @@ print(f">>> Thermalization with field transformation completed in {ft_therm_time
 # Run HMC with field transformation
 print(">>> Starting simulation with field transformation...")
 ft_run_start_time = time.time()
-with torch.profiler.profile(
-    activities=[torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA],
-    schedule=torch.profiler.schedule(wait=2, warmup=2, active=10, repeat=1),
-    on_trace_ready=torch.profiler.tensorboard_trace_handler("./tb_prof"),
-    record_shapes=True,
-    with_stack=True
-) as prof:
-    final_config, plaq_ls, acceptance_rate, topological_charges, hamiltonians = hmc.run(n_iterations, theta_thermalized, store_interval, save_config=False)
-    prof.step()
-    
-print(prof.key_averages().table(sort_by="cuda_time_total"))
-
+final_config, plaq_ls, acceptance_rate, topological_charges, hamiltonians = hmc.run(n_iterations, theta_thermalized, store_interval, save_config=False)
 ft_run_end_time = time.time()
 ft_run_time = ft_run_end_time - ft_run_start_time
 print(f">>> Simulation with field transformation completed in {ft_run_time:.2f} seconds")

@@ -84,6 +84,7 @@ fabric.print(f"Save tag: {args.save_tag}")
 fabric.print(f"Random seed: {args.rand_seed}")
 fabric.print(f"Identity initialization: {args.if_identity_init}")
 fabric.print(f"Check Jacobian: {args.if_check_jac}")
+fabric.print(f"Superparameters: {superparams}")
 fabric.print("="*60)
 
 if fabric.global_rank == 0: # only rank 0 can create directories
