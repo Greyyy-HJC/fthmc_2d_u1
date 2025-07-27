@@ -242,6 +242,7 @@ def auto_from_chi(topo, max_lag, beta, volume):
     """
     # round topo to the nearest integer
     topo = np.round(topo).astype(int)
+    topo = topo - np.mean(topo)  #? NOTE: ensure zero-mean
     
     # compute the infinite volume topological susceptibility χ_t^∞(β)
     chi_t_inf = chi_infinity(beta)
