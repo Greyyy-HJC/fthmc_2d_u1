@@ -43,7 +43,7 @@ echo "PYTHONPATH: $PYTHONPATH"
 # run
 # python compare_hmc.py --lattice_size 128 --n_configs 10240 --beta 6 --step_size 0.06 --max_lag 200 --rand_seed 2008 --device 'cuda'
 
-python compare_fthmc.py --lattice_size 128 --n_configs 4096 --beta 6.0 --train_beta 4.0 --step_size 0.06 --ft_step_size 0.05 --max_lag 200 --rand_seed 2008 --model_tag 'stable' --save_tag 'stable' --device 'cuda'
+python compare_fthmc.py --lattice_size 128 --n_configs 4096 --beta 6.0 --train_beta 4.0 --step_size 0.06 --ft_step_size 0.05 --max_lag 200 --rand_seed 2008 --model_tag 'simple' --save_tag 'simple' --device 'cuda'
 
 # calculate total time
 end_time=$(date +"%Y-%m-%d %H:%M:%S")

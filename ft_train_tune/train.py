@@ -6,7 +6,7 @@ import argparse
 import time
 import datetime
 from fthmc_2d_u1.utils.func import set_seed
-from fthmc_2d_u1.utils.field_trans_tune import FieldTransformation
+from fthmc_2d_u1.utils.field_trans import FieldTransformation
 from lightning.fabric import Fabric
 
 # Record program start time
@@ -56,13 +56,13 @@ parser.add_argument('--init_std', type=float, default=None,
 args = parser.parse_args()
 lattice_size = args.lattice_size
 
-superparams = {}
+hyperparams = {}
 if args.lr is not None:
-    superparams['lr'] = args.lr
+    hyperparams['lr'] = args.lr
 if args.weight_decay is not None:
-    superparams['weight_decay'] = args.weight_decay
+    hyperparams['weight_decay'] = args.weight_decay
 if args.init_std is not None:
-    superparams['init_std'] = args.init_std
+    hyperparams['init_std'] = args.init_std
 
 # Print all arguments
 fabric.print("="*60)
@@ -84,7 +84,7 @@ fabric.print(f"Save tag: {args.save_tag}")
 fabric.print(f"Random seed: {args.rand_seed}")
 fabric.print(f"Identity initialization: {args.if_identity_init}")
 fabric.print(f"Check Jacobian: {args.if_check_jac}")
-fabric.print(f"Superparameters: {superparams}")
+fabric.print(f"Hyperparameters: {hyperparams}")
 fabric.print("="*60)
 
 if fabric.global_rank == 0: # only rank 0 can create directories
@@ -105,7 +105,7 @@ torch.set_float32_matmul_precision('high')
 
 # %%
 # initialize the field transformation
-nn_ft = FieldTransformation(lattice_size, device=device, n_subsets=args.n_subsets, if_check_jac=args.if_check_jac, num_workers=args.n_workers, identity_init=args.if_identity_init, model_tag=args.model_tag, save_tag=args.save_tag, fabric=fabric, backend='eager', input_superparams=superparams)
+nn_ft = FieldTransformation(lattice_size, device=device, n_subsets=args.n_subsets, if_check_jac=args.if_check_jac, num_workers=args.n_workers, identity_init=args.if_identity_init, model_tag=args.model_tag, save_tag=args.save_tag, fabric=fabric, backend='eager', input_hyperparams=hyperparams)
 
 if args.continue_beta is not None:
     continue_beta = args.continue_beta

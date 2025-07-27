@@ -6,7 +6,7 @@ import argparse
 import time
 import datetime
 from fthmc_2d_u1.utils.func import set_seed
-from fthmc_2d_u1.utils.field_trans_log import FieldTransformation
+from fthmc_2d_u1.utils.field_trans import FieldTransformation
 from lightning.fabric import Fabric
 
 # Record program start time
@@ -26,6 +26,8 @@ parser.add_argument('--max_beta', type=float, required=True,
                     help='Maximum beta value for training (exclusive)')
 parser.add_argument('--beta_gap', type=float, required=True,
                     help='Beta gap for training')
+parser.add_argument('--continue_beta', type=float, default=None,
+                    help='Continue training from the best model at this beta (default: None)')
 parser.add_argument('--n_epochs', type=int, default=16,
                     help='Number of training epochs (default: 16)')
 parser.add_argument('--batch_size', type=int, default=32,
@@ -37,19 +39,30 @@ parser.add_argument('--n_workers', type=int, default=0,
 parser.add_argument('--model_tag', type=str, default='simple',
                     help='Model tag for training (default: simple)')
 parser.add_argument('--save_tag', type=str, default=None,
-                    help='Save tag for training (default: None)')
+                    help='Save tag for training (default: None), model name; train on which L; which random seed; if test')
 parser.add_argument('--rand_seed', type=int, default=1331,
                     help='Random seed for training (default: 1331)')
 parser.add_argument('--if_identity_init', action='store_true',
                     help='Initialize models to produce identity transformation (default: False)')
 parser.add_argument('--if_check_jac', action='store_true',
                     help='Check Jacobian for training (default: False)')
-parser.add_argument('--if_continue', action='store_true',
-                    help='Continue training from the best model (default: False)')
-
+parser.add_argument('--lr', type=float, default=None,
+                    help='Learning rate for training (default: None)')
+parser.add_argument('--weight_decay', type=float, default=None,
+                    help='Weight decay for training (default: None)')
+parser.add_argument('--init_std', type=float, default=None,
+                    help='Initial standard deviation for training (default: None)')
 
 args = parser.parse_args()
 lattice_size = args.lattice_size
+
+hyperparams = {}
+if args.lr is not None:
+    hyperparams['lr'] = args.lr
+if args.weight_decay is not None:
+    hyperparams['weight_decay'] = args.weight_decay
+if args.init_std is not None:
+    hyperparams['init_std'] = args.init_std
 
 # Print all arguments
 fabric.print("="*60)
@@ -61,6 +74,7 @@ fabric.print(f"Lattice size: {lattice_size}x{lattice_size}")
 fabric.print(f"Minimum beta: {args.min_beta}")
 fabric.print(f"Maximum beta: {args.max_beta}")
 fabric.print(f"Beta gap: {args.beta_gap}")
+fabric.print(f"Continue training from beta: {args.continue_beta}")
 fabric.print(f"Number of epochs: {args.n_epochs}")
 fabric.print(f"Batch size: {args.batch_size}")
 fabric.print(f"Number of subsets: {args.n_subsets}")
@@ -70,7 +84,7 @@ fabric.print(f"Save tag: {args.save_tag}")
 fabric.print(f"Random seed: {args.rand_seed}")
 fabric.print(f"Identity initialization: {args.if_identity_init}")
 fabric.print(f"Check Jacobian: {args.if_check_jac}")
-fabric.print(f"Continue training: {args.if_continue}")
+fabric.print(f"Hyperparameters: {hyperparams}")
 fabric.print("="*60)
 
 if fabric.global_rank == 0: # only rank 0 can create directories
@@ -91,12 +105,12 @@ torch.set_float32_matmul_precision('high')
 
 # %%
 # initialize the field transformation
-nn_ft = FieldTransformation(lattice_size, device=device, n_subsets=args.n_subsets, if_check_jac=args.if_check_jac, num_workers=args.n_workers, identity_init=args.if_identity_init, model_tag=args.model_tag, save_tag=args.save_tag, fabric=fabric)
+nn_ft = FieldTransformation(lattice_size, device=device, n_subsets=args.n_subsets, if_check_jac=args.if_check_jac, num_workers=args.n_workers, identity_init=args.if_identity_init, model_tag=args.model_tag, save_tag=args.save_tag, fabric=fabric, backend='eager', input_hyperparams=hyperparams)
 
-if args.if_continue:
-    start_beta = args.min_beta - args.beta_gap
-    nn_ft._load_best_model(train_beta=start_beta)
-    fabric.print(f">>> Loaded the best model at beta = {start_beta} to continue training")
+if args.continue_beta is not None:
+    continue_beta = args.continue_beta
+    nn_ft._load_best_model(train_beta=continue_beta)
+    fabric.print(f">>> Loaded the best model at beta = {continue_beta} to continue training")
 else:
     fabric.print(">>> Training from scratch")
 

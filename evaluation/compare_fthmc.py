@@ -80,7 +80,7 @@ print(">>> Neural Network Field Transformation HMC Simulation: ")
 # initialize the field transformation
 n_subsets = 8
 n_workers = 0 # * n_workers = 0 is faster
-nn_ft = FieldTransformation(lattice_size, device=device, n_subsets=n_subsets, if_check_jac=False, num_workers=n_workers, identity_init=True, model_tag=args.model_tag, save_tag=args.save_tag)
+nn_ft = FieldTransformation(lattice_size, device=device, n_subsets=n_subsets, if_check_jac=False, num_workers=n_workers, identity_init=True, model_tag=args.model_tag, save_tag=args.save_tag, backend='inductor')
 
 # Load the trained model using the _load_best_model method
 model_load_start_time = time.time()

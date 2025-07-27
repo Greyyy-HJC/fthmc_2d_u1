@@ -20,7 +20,7 @@ except AttributeError:
 import time
 import argparse
 from fthmc_2d_u1.evaluation_test.hmc_u1_ft import HMC_U1_FT
-from fthmc_2d_u1.utils.field_trans_tune import FieldTransformation
+from fthmc_2d_u1.utils.field_trans import FieldTransformation
 from fthmc_2d_u1.utils.func import hmc_summary, set_seed
 
 parser = argparse.ArgumentParser(description='Parameters for Comparison')

@@ -7,7 +7,7 @@
 #PBS -q by-gpu
 #PBS -j oe
 #PBS -l walltime=12:00:00
-#PBS -o /eagle/fthmc/run/fthmc_2d_u1/ft_train/logs/train_L64_b4.5-b5.0_stable.log
+#PBS -o /eagle/fthmc/run/fthmc_2d_u1/ft_train/logs/train_L64_b2.0-b4.0_rsat_tuned_round2.log
 
 # switch to the submit directory
 WORKDIR=/eagle/fthmc/run/fthmc_2d_u1/ft_train
@@ -40,10 +40,16 @@ export PYTHONPATH="/eagle/fthmc/run"
 echo "Python path: $(which python)"
 echo "PYTHONPATH: $PYTHONPATH"
 
-# run train.py
-# torchrun --standalone --nproc_per_node=2 train.py --lattice_size 64 --min_beta 2.0 --max_beta 2.0 --beta_gap 0.5 --n_epochs 32 --batch_size 64 --n_subsets 8 --n_workers 0 --model_tag 'rnet' --save_tag 'rnet' --rand_seed 2008 --if_identity_init
+# set pytorch cuda alloc config
+export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128,expandable_segments:True
 
-torchrun --standalone --nproc_per_node=2 train.py --lattice_size 64 --min_beta 4.5 --max_beta 5.0 --beta_gap 0.5 --n_epochs 32 --batch_size 32 --n_subsets 8 --n_workers 0 --model_tag 'stable' --save_tag 'stable' --rand_seed 2008 --if_identity_init --if_continue
+
+# run train.py
+torchrun --standalone --nproc_per_node=2 train.py \
+    --lattice_size 64 --min_beta 2.0 --max_beta 4.0 --beta_gap 0.5 \
+    --n_epochs 32 --batch_size 32 --n_subsets 8 --n_workers 0 \
+    --model_tag 'rsat' --save_tag 'rsat_L64_tuned_round2' --rand_seed 2008 --if_identity_init \
+    --continue_beta 2.0
 
 # calculate total time
 end_time=$(date +"%Y-%m-%d %H:%M:%S")
