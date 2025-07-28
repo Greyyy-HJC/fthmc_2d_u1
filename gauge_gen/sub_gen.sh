@@ -7,7 +7,7 @@
 #PBS -q by-gpu
 #PBS -j oe
 #PBS -l walltime=24:00:00
-#PBS -o /eagle/fthmc/run/fthmc_2d_u1/gauge_gen/logs/gen_L32_b2.5-b5.5.log
+#PBS -o /eagle/fthmc/run/fthmc_2d_u1/gauge_gen/logs/gen_L64_b2.5-b5.5.log
 
 # switch to the submit directory
 WORKDIR=/eagle/fthmc/run/fthmc_2d_u1/gauge_gen

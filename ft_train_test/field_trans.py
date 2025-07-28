@@ -20,22 +20,12 @@ torch_logger.setLevel(logging.ERROR)  # Only show error level logs
 torch_logger.propagate = False
 
 
-#TODO: test
-# activations = {}
-# def get_activation(name):
-#     def hook(model, input, output):
-#         # Only keep tensor, do not compute gradient
-#         activations[name] = output.detach()
-#     return hook
-#TODO
-
-
 from fthmc_2d_u1.utils.func import plaq_from_field_batch, rect_from_field_batch, get_field_mask, get_plaq_mask, get_rect_mask
 from fthmc_2d_u1.utils.cnn_models import choose_cnn_model
 
 class FieldTransformation:
     """Neural network based field transformation"""
-    def __init__(self, lattice_size, device='cpu', n_subsets=8, if_check_jac=False, num_workers=0, identity_init=True, save_tag=None, model_tag='simple', fabric=None):
+    def __init__(self, lattice_size, device='cpu', n_subsets=8, if_check_jac=False, num_workers=0, identity_init=True, save_tag=None, model_tag='simple', fabric=None, backend='eager', input_hyperparams=None):
         self.L = lattice_size
         self.device = torch.device(device)
         self.n_subsets = n_subsets
@@ -43,10 +33,26 @@ class FieldTransformation:
         self.num_workers = num_workers
         self.train_beta = None # init, will be set in train function
         self.model_tag = model_tag
-        self.save_tag = save_tag
+        self.save_tag = save_tag # model name; train on which L; which random seed; if test
         self.fabric = fabric
         self.print = self.fabric.print if self.fabric is not None else print
         self.backward = self.fabric.backward if self.fabric is not None else torch.autograd.backward
+        self.backend = backend # 'eager' for training, 'inductor' for evaluation
+        
+        
+        self.hyperparams = {}
+        self.hyperparams['init_std'] = 0.001
+        self.hyperparams['lr'] = 0.005
+        self.hyperparams['weight_decay'] = 0.001
+        self.hyperparams['betas'] = (0.9, 0.999)
+        self.hyperparams['eps'] = 1e-8
+        self.hyperparams['factor'] = 0.5
+        self.hyperparams['patience'] = 5
+        self.hyperparams['early_stopping'] = True
+        self.hyperparams['early_stopping_patience'] = 10
+        
+        if input_hyperparams is not None:
+            self.hyperparams.update(input_hyperparams)
         
         # Create n_subsets independent models for each subset
         cnn_model = choose_cnn_model(model_tag)
@@ -57,11 +63,10 @@ class FieldTransformation:
             for model in raw_models:
                 # Initialize all weights to a small non-zero value
                 for param in model.parameters():
-                    nn.init.normal_(param, mean=0.0, std=0.001)
-                    # nn.init.zeros_(param)
+                    nn.init.normal_(param, mean=0.0, std=self.hyperparams['init_std'])
         
         raw_optimizers = [
-            torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-4)
+            torch.optim.AdamW(model.parameters(), lr=self.hyperparams['lr'], weight_decay=self.hyperparams['weight_decay'], betas=self.hyperparams['betas'], eps=self.hyperparams['eps'])
             for model in raw_models
         ]
         
@@ -74,16 +79,9 @@ class FieldTransformation:
             self.models.append(model)
             self.optimizers.append(optimizer)
             
-        #TODO: test
-        # for i, model in enumerate(self.models):
-        #     for name, module in model.named_modules():
-        #         if isinstance(module, nn.Conv2d):
-        #             module.register_forward_hook(get_activation(f'model_{i}_{name}'))
-        #TODO
-        
         self.schedulers = [
             torch.optim.lr_scheduler.ReduceLROnPlateau(
-                optimizer, mode='min', factor=0.5, patience=5
+                optimizer, mode='min', factor=self.hyperparams['factor'], patience=self.    hyperparams['patience']
             )
             for optimizer in self.optimizers
         ]
@@ -98,7 +96,7 @@ class FieldTransformation:
                 # Only compile compute-intensive functions with safer backend option
                 # Use 'eager' backend and configure for minimal logs
                 compile_options = {
-                    "backend": "eager",     # Simple backend, avoid C++ compilation errors
+                    "backend": self.backend,     # Simple backend, avoid C++ compilation errors
                     "fullgraph": False,     # Do not require full graph compilation
                     "dynamic": True,        # Allow dynamic shapes, reduce recompilation warnings
                 }
@@ -340,7 +338,6 @@ class FieldTransformation:
             # Compute all cos values at once and apply -1 sign
             cos_plaq_stack = -torch.cos(plaq_angles)  # [batch_size, 4, L, L]
             
-            #TODO: Clear intermediate variables
             del plaq_angles, plaq_roll_1_2, plaq_roll_1_1
             
             # Get K0, K1 coefficients using cached plaq and rect
@@ -354,7 +351,6 @@ class FieldTransformation:
             ], dim=1)  # [batch_size, 2, L, L]
             plaq_jac_shift = plaq_jac_shift * field_mask
             
-            #TODO: Clear intermediate variables
             del temp, cos_plaq_stack, K0
             
             # TRIGONOMETRIC OPTIMIZATION: Vectorized cos computation for rectangles
@@ -373,7 +369,6 @@ class FieldTransformation:
             # Compute all cos values at once and apply -1 sign
             cos_rect_stack = -torch.cos(rect_angles)  # [batch_size, 8, L, L]
             
-            #TODO: Clear intermediate variables
             del rect_angles, rect_dir0_roll_1_1, rect_dir0_roll_1_1_1_2, rect_dir0_roll_1_2
             del rect_dir1_roll_1_2, rect_dir1_roll_1_1_1_2, rect_dir1_roll_1_1
             
@@ -385,13 +380,11 @@ class FieldTransformation:
             ], dim=1)  # [batch_size, 2, L, L]
             rect_jac_shift = rect_jac_shift * field_mask
             
-            #TODO: Clear intermediate variables
             del temp, cos_rect_stack, K1
             
             # Accumulate log determinant
             log_det += torch.log(1 + plaq_jac_shift + rect_jac_shift).sum(dim=(1, 2, 3))
             
-            #TODO: Clear intermediate variables
             del plaq_jac_shift, rect_jac_shift, field_mask, plaq, rect, rect_dir0, rect_dir1
             
             # Update theta for next subset
@@ -461,17 +454,11 @@ class FieldTransformation:
         # Transform original configuration to new configuration
         theta_new = self.inverse(theta_ori)
         
-        # Compute forces in original and transformed spaces
-        # force_ori = self.compute_force(theta_new, beta=1) #todo
+        # Compute forces in transformed spaces
         force_new = self.compute_force(theta_new, self.train_beta, transformed=True)
         
         # Compute loss using multiple norms
         vol = self.L * self.L
-        # loss = torch.norm(force_new - force_ori, p=2) / (vol**(1/2)) + \
-        #        torch.norm(force_new - force_ori, p=4) / (vol**(1/4)) + \
-        #        torch.norm(force_new - force_ori, p=6) / (vol**(1/6)) + \
-        #        torch.norm(force_new - force_ori, p=8) / (vol**(1/8))
-        
         loss = torch.norm(force_new, p=2) / (vol**(1/2)) + \
                torch.norm(force_new, p=4) / (vol**(1/4)) + \
                torch.norm(force_new, p=6) / (vol**(1/6)) + \
@@ -486,25 +473,9 @@ class FieldTransformation:
         """Perform a single training step for all subsets together"""
         theta_ori = theta_ori.to(self.device)
         
-        #TODO: test
-        # batch_stats = {
-        #     "input_mean": theta_ori.mean().item(),
-        #     "input_std":  theta_ori.std().item(),
-        #     "acts": {},         # layer activation std
-        #     "grads": {}         # parameter grad norm
-        # }
-        #TODO
-        
         with torch.autograd.set_grad_enabled(True):
             # Compute loss
             loss = self.loss_fn(theta_ori)
-            
-            #TODO: test
-            # acts_copy = activations.copy()
-            # activations.clear()
-            # for lname, feat in acts_copy.items():
-            #     batch_stats["acts"][lname] = feat.std().item()
-            #TODO
             
             # Zero all gradients
             self._zero_all_grads()
@@ -512,19 +483,10 @@ class FieldTransformation:
             # Backpropagate
             self.backward(loss)
             
-            #TODO: test
-            # for i, model in enumerate(self.models):
-            #     for pname, p in model.named_parameters():
-            #         if p.grad is not None:
-            #             batch_stats["grads"][f"model_{i}_{pname}"] = p.grad.norm().item()
-            #         else:
-            #             batch_stats["grads"][f"model_{i}_{pname}"] = 0.000
-            #TODO
-            
             # Update all models
             self._step_all_optimizers()
             
-        return loss.item()#, batch_stats
+        return loss.item()
     
     def _zero_all_grads(self):
         """Zero gradients for all optimizers"""
@@ -569,6 +531,11 @@ class FieldTransformation:
         test_losses = []
         best_loss = float('inf')
         
+        # Early stopping variables
+        early_stopping_counter = 0
+        early_stopping_patience = self.hyperparams['early_stopping_patience']
+        use_early_stopping = self.hyperparams['early_stopping']
+        
         self.train_beta = train_beta
         
         # Create data loaders
@@ -590,41 +557,14 @@ class FieldTransformation:
             # Training phase
             self._set_models_mode(True)  # Set models to training mode
             
-            #TODO: test
-            # epoch_input_stds = []
-            # epoch_act_stds = {} # layer_name -> [std1, std2, ...]
-            # epoch_grad_norms = {} # model_i_pname -> [norm1, norm2, ...]
-            #TODO
-            
             epoch_losses = []
             
             for batch in tqdm(train_loader, desc=f"Epoch {epoch+1}/{n_epochs}"):
                 loss = self.train_step(batch)
                 epoch_losses.append(loss)
                 
-                #TODO: test
-                # loss, batch_stats = self.train_step(batch)
-                # epoch_losses.append(loss)
-                
-                # epoch_input_stds.append(batch_stats["input_std"])
-                # for lname, std in batch_stats["acts"].items():
-                #     epoch_act_stds.setdefault(lname, []).append(std)
-                # for pname, norm in batch_stats["grads"].items():
-                #     epoch_grad_norms.setdefault(pname, []).append(norm)
-                #TODO
-                
             train_loss = np.mean(epoch_losses)
             train_losses.append(train_loss)
-            
-            #TODO: test
-            # self.print(f"\n[β={train_beta}] Epoch {epoch+1} summary:")
-            # self.print(f"  input  std: mean={np.mean(epoch_input_stds):.3e}")
-            # for lname, stds in epoch_act_stds.items():
-            #     self.print(f"  layer {lname:20s} act-std: mean={np.mean(stds):.3e}")
-            # for pname, norms in epoch_grad_norms.items():
-            #     # only print common layers, too many will be truncated
-            #     self.print(f"  param {pname:30s} grad-norm: mean={np.mean(norms):.3e}")
-            #TODO
             
             # Evaluation phase
             self._set_models_mode(False)  # Set models to evaluation mode
@@ -643,10 +583,19 @@ class FieldTransformation:
                   f"Train Loss: {train_loss:.6f} - "
                   f"Test Loss: {test_loss:.6f}")
             
-            # Save best model
+            # Save best model and check early stopping
             if test_loss < best_loss:
                 self._save_best_model(epoch, test_loss)
                 best_loss = test_loss
+                early_stopping_counter = 0  # Reset counter when improvement found
+            else:
+                early_stopping_counter += 1
+            
+            # Check early stopping
+            if use_early_stopping and early_stopping_counter >= early_stopping_patience:
+                self.print(f"\nEarly stopping triggered after {epoch+1} epochs "
+                          f"(no improvement for {early_stopping_patience} epochs)")
+                break
             
             # Update learning rate schedulers
             self._update_schedulers(test_loss)
@@ -702,10 +651,7 @@ class FieldTransformation:
             
         # make sure the models directory exists
         os.makedirs('../models', exist_ok=True)
-        if self.save_tag is None:
-            torch.save(save_dict, f'../models/best_model_opt_L{self.L}_train_beta{self.train_beta}.pt')
-        else:
-            torch.save(save_dict, f'../models/best_model_opt_L{self.L}_train_beta{self.train_beta}_{self.save_tag}.pt')
+        torch.save(save_dict, f'../models/best_model_train_beta{self.train_beta}_{self.save_tag}.pt')
 
     def _plot_training_history(self, train_losses, test_losses):
         """
@@ -722,7 +668,7 @@ class FieldTransformation:
         plt.ylabel('Loss')
         plt.legend()
         plt.grid(True)
-        plt.savefig(f'plots/cnn_opt_loss_L{self.L}_train_beta{self.train_beta}_{self.save_tag}.pdf', transparent=True)
+        plt.savefig(f'plots/cnn_loss_L{self.L}_train_beta{self.train_beta}_{self.save_tag}.pdf', transparent=True)
         plt.show()
 
     def _load_best_model(self, train_beta):
@@ -732,10 +678,7 @@ class FieldTransformation:
         Args:
             train_beta: Beta value used during training
         """
-        if self.save_tag is None:
-            checkpoint_path = f'../models/best_model_opt_L{self.L}_train_beta{train_beta:.1f}.pt'
-        else:
-            checkpoint_path = f'../models/best_model_opt_L{self.L}_train_beta{train_beta:.1f}_{self.save_tag}.pt'
+        checkpoint_path = f'../models/best_model_train_beta{train_beta}_{self.save_tag}.pt'
         try:
             checkpoint = torch.load(checkpoint_path, map_location=self.device, weights_only=False)
             

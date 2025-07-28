@@ -1,0 +1,519 @@
+ 
+>>> PBS_NODEFILE content:
+sophia-gpu-02.lab.alcf.anl.gov
+1n*1t
+Mon Jul 28 19:50:24 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.127.05             Driver Version: 550.127.05     CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          Off |   00000000:07:00.0 Off |                    0 |
+| N/A   24C    P0             53W /  400W |       1MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-40GB          Off |   00000000:0F:00.0 Off |                    0 |
+| N/A   22C    P0             52W /  400W |       1MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Thu_Mar_28_02:18:24_PDT_2024
+Cuda compilation tools, release 12.4, V12.4.131
+Build cuda_12.4.r12.4/compiler.34097967_0
+Start time: 2025-07-28 19:50:25
+Python 3.9.18
+Python path: /lus/eagle/projects/fthmc/software/ml/bin/python
+PYTHONPATH: /eagle/fthmc/run
+You are using a CUDA device ('NVIDIA A100-SXM4-40GB') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+[W728 19:50:33.474691551 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+============================================================
+>>> CUDA device count: 2
+PyTorch version: 2.5.0+cu124
+CUDA available: True
+>>> Arguments:
+Lattice size: 32x32
+Minimum beta: 2.0
+Maximum beta: 2.0
+Beta gap: 0.5
+Continue training from beta: None
+Number of epochs: 64
+Batch size: 64
+Number of subsets: 8
+Number of workers: 0
+Model tag: v12
+Save tag: test_localv12
+Random seed: 2008
+Identity initialization: True
+Check Jacobian: False
+Hyperparameters: {}
+============================================================
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+[W728 19:50:33.817259567 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+Trying to use torch.compile for optimized computation...
+Successfully initialized torch.compile
+>>> Training from scratch
+Loaded data shape: torch.Size([4096, 2, 32, 32])
+Training data shape: torch.Size([3276, 2, 32, 32])
+Testing data shape: torch.Size([820, 2, 32, 32])
+
+>>> Training the model at beta =  2.0
+
+>>> Training the model at beta = 2.0
+
+Training epochs:   0%|          | 0/64 [00:00<?, ?it/s]
+Epoch 1/64:   0%|          | 0/26 [00:00<?, ?it/s][ATraining epochs:   0%|          | 0/64 [00:00<?, ?it/s]
+Epoch 1/64:   0%|          | 0/26 [00:00<?, ?it/s][A
+Epoch 1/64:   4%|▍         | 1/26 [00:13<05:40, 13.64s/it][A
+Epoch 1/64:   4%|▍         | 1/26 [00:13<05:41, 13.65s/it][A
+Epoch 1/64:   8%|▊         | 2/26 [00:14<02:29,  6.24s/it][A
+Epoch 1/64:   8%|▊         | 2/26 [00:14<02:29,  6.24s/it][A
+Epoch 1/64:  12%|█▏        | 3/26 [00:15<01:30,  3.93s/it][A
+Epoch 1/64:  12%|█▏        | 3/26 [00:15<01:30,  3.93s/it][A
+Epoch 1/64:  15%|█▌        | 4/26 [00:17<01:02,  2.84s/it][A
+Epoch 1/64:  15%|█▌        | 4/26 [00:17<01:02,  2.84s/it][A
+Epoch 1/64:  19%|█▉        | 5/26 [00:18<00:46,  2.22s/it][A
+Epoch 1/64:  19%|█▉        | 5/26 [00:18<00:46,  2.22s/it][A
+Epoch 1/64:  23%|██▎       | 6/26 [00:19<00:37,  1.87s/it][A
+Epoch 1/64:  23%|██▎       | 6/26 [00:19<00:37,  1.87s/it][A
+Epoch 1/64:  27%|██▋       | 7/26 [00:20<00:31,  1.68s/it][A
+Epoch 1/64:  27%|██▋       | 7/26 [00:20<00:32,  1.69s/it][A
+Epoch 1/64:  31%|███       | 8/26 [00:22<00:30,  1.69s/it][A
+Epoch 1/64:  31%|███       | 8/26 [00:22<00:30,  1.70s/it][A
+Epoch 1/64:  35%|███▍      | 9/26 [00:26<00:43,  2.54s/it][A
+Epoch 1/64:  35%|███▍      | 9/26 [00:26<00:43,  2.54s/it][A
+Epoch 1/64:  38%|███▊      | 10/26 [00:28<00:35,  2.23s/it][A
+Epoch 1/64:  38%|███▊      | 10/26 [00:28<00:35,  2.23s/it][A
+Epoch 1/64:  42%|████▏     | 11/26 [00:29<00:30,  2.00s/it][A
+Epoch 1/64:  42%|████▏     | 11/26 [00:29<00:30,  2.00s/it][A
+Epoch 1/64:  46%|████▌     | 12/26 [00:31<00:28,  2.05s/it][A
+Epoch 1/64:  46%|████▌     | 12/26 [00:31<00:28,  2.05s/it][A
+Epoch 1/64:  50%|█████     | 13/26 [00:33<00:24,  1.89s/it][A
+Epoch 1/64:  50%|█████     | 13/26 [00:33<00:24,  1.89s/it][A
+
+Epoch 1/64:  54%|█████▍    | 14/26 [00:34<00:21,  1.77s/it][AEpoch 1/64:  54%|█████▍    | 14/26 [00:34<00:21,  1.77s/it][A
+Epoch 1/64:  58%|█████▊    | 15/26 [00:36<00:18,  1.70s/it][A
+Epoch 1/64:  58%|█████▊    | 15/26 [00:36<00:18,  1.70s/it][A
+Epoch 1/64:  62%|██████▏   | 16/26 [00:38<00:16,  1.65s/it][A
+Epoch 1/64:  62%|██████▏   | 16/26 [00:38<00:16,  1.66s/it][A
+Epoch 1/64:  65%|██████▌   | 17/26 [00:39<00:14,  1.63s/it][A
+Epoch 1/64:  65%|██████▌   | 17/26 [00:39<00:14,  1.64s/it][A
+Epoch 1/64:  69%|██████▉   | 18/26 [00:41<00:12,  1.62s/it][A
+Epoch 1/64:  69%|██████▉   | 18/26 [00:41<00:12,  1.62s/it][A
+Epoch 1/64:  73%|███████▎  | 19/26 [00:42<00:11,  1.62s/it][A
+Epoch 1/64:  73%|███████▎  | 19/26 [00:42<00:11,  1.62s/it][A
+Epoch 1/64:  77%|███████▋  | 20/26 [00:44<00:09,  1.61s/it][A
+Epoch 1/64:  77%|███████▋  | 20/26 [00:44<00:09,  1.61s/it][A
+Epoch 1/64:  81%|████████  | 21/26 [00:45<00:07,  1.60s/it][A
+Epoch 1/64:  81%|████████  | 21/26 [00:46<00:07,  1.60s/it][A
+Epoch 1/64:  85%|████████▍ | 22/26 [00:47<00:06,  1.60s/it][A
+Epoch 1/64:  85%|████████▍ | 22/26 [00:47<00:06,  1.60s/it][A
+Epoch 1/64:  88%|████████▊ | 23/26 [00:49<00:04,  1.60s/it][A
+Epoch 1/64:  88%|████████▊ | 23/26 [00:49<00:04,  1.61s/it][A
+Epoch 1/64:  92%|█████████▏| 24/26 [00:50<00:03,  1.62s/it][A
+Epoch 1/64:  92%|█████████▏| 24/26 [00:50<00:03,  1.62s/it][A
+Epoch 1/64:  96%|█████████▌| 25/26 [00:52<00:01,  1.62s/it][A
+Epoch 1/64:  96%|█████████▌| 25/26 [00:52<00:01,  1.62s/it][A
+Epoch 1/64: 100%|██████████| 26/26 [00:54<00:00,  1.62s/it][AEpoch 1/64: 100%|██████████| 26/26 [00:54<00:00,  2.08s/it]
+
+
+Evaluating:   0%|          | 0/7 [00:00<?, ?it/s][AEpoch 1/64: 100%|██████████| 26/26 [00:54<00:00,  1.62s/it][AEpoch 1/64: 100%|██████████| 26/26 [00:54<00:00,  2.08s/it]
+
+Evaluating:   0%|          | 0/7 [00:00<?, ?it/s][A
+Evaluating:  14%|█▍        | 1/7 [00:00<00:03,  1.63it/s][A
+Evaluating:  14%|█▍        | 1/7 [00:00<00:03,  1.59it/s][A
+Evaluating:  29%|██▊       | 2/7 [00:01<00:03,  1.60it/s][A
+Evaluating:  29%|██▊       | 2/7 [00:01<00:03,  1.57it/s][A
+Evaluating:  43%|████▎     | 3/7 [00:01<00:02,  1.59it/s][A
+Evaluating:  43%|████▎     | 3/7 [00:01<00:02,  1.57it/s][A
+Evaluating:  57%|█████▋    | 4/7 [00:02<00:01,  1.59it/s][A
+Evaluating:  57%|█████▋    | 4/7 [00:02<00:01,  1.58it/s][A
+Evaluating:  71%|███████▏  | 5/7 [00:03<00:01,  1.59it/s][A
+Evaluating:  71%|███████▏  | 5/7 [00:03<00:01,  1.59it/s][A
+Evaluating:  86%|████████▌ | 6/7 [00:03<00:00,  1.59it/s][A
+Evaluating:  86%|████████▌ | 6/7 [00:03<00:00,  1.59it/s][A
+Evaluating: 100%|██████████| 7/7 [00:04<00:00,  1.61it/s][AEvaluating: 100%|██████████| 7/7 [00:04<00:00,  1.60it/s]
+Epoch 1/64 - Train Loss: 30.148604 - Test Loss: 25.859561
+Training epochs:   2%|▏         | 1/64 [00:58<1:01:29, 58.57s/it]
+
+Epoch 2/64:   0%|          | 0/26 [00:00<?, ?it/s][AEvaluating: 100%|██████████| 7/7 [00:04<00:00,  1.56it/s][AEvaluating: 100%|██████████| 7/7 [00:04<00:00,  1.57it/s]
+Training epochs:   2%|▏         | 1/64 [00:58<1:01:34, 58.64s/it]
+Epoch 2/64:   0%|          | 0/26 [00:00<?, ?it/s][A
+Epoch 2/64:   4%|▍         | 1/26 [00:01<00:41,  1.67s/it][A
+Epoch 2/64:   4%|▍         | 1/26 [00:01<00:40,  1.61s/it][A
+Epoch 2/64:   8%|▊         | 2/26 [00:03<00:39,  1.64s/it][A
+Epoch 2/64:   8%|▊         | 2/26 [00:03<00:38,  1.61s/it][A
+Epoch 2/64:  12%|█▏        | 3/26 [00:04<00:37,  1.63s/it][A
+Epoch 2/64:  12%|█▏        | 3/26 [00:04<00:37,  1.61s/it][A
+Epoch 2/64:  15%|█▌        | 4/26 [00:06<00:35,  1.63s/it][A
+Epoch 2/64:  15%|█▌        | 4/26 [00:06<00:35,  1.61s/it][A
+Epoch 2/64:  19%|█▉        | 5/26 [00:08<00:34,  1.63s/it][A
+Epoch 2/64:  19%|█▉        | 5/26 [00:08<00:33,  1.62s/it][A
+Epoch 2/64:  23%|██▎       | 6/26 [00:09<00:32,  1.62s/it][A
+Epoch 2/64:  23%|██▎       | 6/26 [00:09<00:32,  1.62s/it][A
+Epoch 2/64:  27%|██▋       | 7/26 [00:11<00:30,  1.62s/it][A
+Epoch 2/64:  27%|██▋       | 7/26 [00:11<00:30,  1.62s/it][A
+Epoch 2/64:  31%|███       | 8/26 [00:12<00:29,  1.63s/it][A
+Epoch 2/64:  31%|███       | 8/26 [00:13<00:29,  1.63s/it][A
+Epoch 2/64:  35%|███▍      | 9/26 [00:14<00:27,  1.63s/it][A
+Epoch 2/64:  35%|███▍      | 9/26 [00:14<00:27,  1.63s/it][A
+Epoch 2/64:  38%|███▊      | 10/26 [00:16<00:26,  1.63s/it][A
+Epoch 2/64:  38%|███▊      | 10/26 [00:16<00:26,  1.63s/it][A
+Epoch 2/64:  42%|████▏     | 11/26 [00:17<00:24,  1.62s/it][A
+Epoch 2/64:  42%|████▏     | 11/26 [00:17<00:24,  1.63s/it][A
+Epoch 2/64:  46%|████▌     | 12/26 [00:19<00:22,  1.63s/it][A
+Epoch 2/64:  46%|████▌     | 12/26 [00:19<00:22,  1.64s/it][A
+Epoch 2/64:  50%|█████     | 13/26 [00:21<00:21,  1.64s/it][A
+Epoch 2/64:  50%|█████     | 13/26 [00:21<00:21,  1.64s/it][A
+Epoch 2/64:  54%|█████▍    | 14/26 [00:22<00:19,  1.64s/it][A
+Epoch 2/64:  54%|█████▍    | 14/26 [00:22<00:19,  1.65s/it][A
+Epoch 2/64:  58%|█████▊    | 15/26 [00:24<00:18,  1.64s/it][A
+Epoch 2/64:  58%|█████▊    | 15/26 [00:24<00:18,  1.64s/it][A
+Epoch 2/64:  62%|██████▏   | 16/26 [00:26<00:16,  1.64s/it][A
+Epoch 2/64:  62%|██████▏   | 16/26 [00:26<00:16,  1.64s/it][A
+Epoch 2/64:  65%|██████▌   | 17/26 [00:27<00:14,  1.64s/it][A
+Epoch 2/64:  65%|██████▌   | 17/26 [00:27<00:14,  1.64s/it][A
+Epoch 2/64:  69%|██████▉   | 18/26 [00:29<00:13,  1.65s/it][A
+Epoch 2/64:  69%|██████▉   | 18/26 [00:29<00:13,  1.65s/it][A
+Epoch 2/64:  73%|███████▎  | 19/26 [00:31<00:11,  1.65s/it][A
+Epoch 2/64:  73%|███████▎  | 19/26 [00:31<00:11,  1.65s/it][A
+Epoch 2/64:  77%|███████▋  | 20/26 [00:32<00:09,  1.64s/it][A
+Epoch 2/64:  77%|███████▋  | 20/26 [00:32<00:09,  1.64s/it][AWarning: Inverse iteration for subset 5 did not converge, final diff = 2.66e-02
+Warning: Inverse iteration for subset 0 did not converge, final diff = 9.77e-02
+
+Epoch 2/64:  81%|████████  | 21/26 [00:37<00:12,  2.43s/it][A
+Epoch 2/64:  81%|████████  | 21/26 [00:36<00:12,  2.43s/it][A
+Epoch 2/64:  85%|████████▍ | 22/26 [00:38<00:08,  2.23s/it][A
+Epoch 2/64:  85%|████████▍ | 22/26 [00:38<00:08,  2.23s/it][A
+Epoch 2/64:  88%|████████▊ | 23/26 [00:40<00:06,  2.11s/it][A
+Epoch 2/64:  88%|████████▊ | 23/26 [00:40<00:06,  2.11s/it][AWarning: Inverse iteration for subset 0 did not converge, final diff = 2.94e-04
+
+Epoch 2/64:  92%|█████████▏| 24/26 [00:43<00:04,  2.37s/it][A
+Epoch 2/64:  92%|█████████▏| 24/26 [00:43<00:04,  2.37s/it][A
+Epoch 2/64:  96%|█████████▌| 25/26 [00:45<00:02,  2.22s/it][A
+Epoch 2/64:  96%|█████████▌| 25/26 [00:45<00:02,  2.23s/it][A
+Epoch 2/64: 100%|██████████| 26/26 [00:47<00:00,  2.14s/it][AEpoch 2/64: 100%|██████████| 26/26 [00:47<00:00,  1.82s/it]
+
+Evaluating:   0%|          | 0/7 [00:00<?, ?it/s][A
+Epoch 2/64: 100%|██████████| 26/26 [00:47<00:00,  2.14s/it][AEpoch 2/64: 100%|██████████| 26/26 [00:47<00:00,  1.82s/it]
+
+Evaluating:   0%|          | 0/7 [00:00<?, ?it/s][AWarning: Inverse iteration for subset 5 did not converge, final diff = 3.94e-02
+
+Evaluating:  14%|█▍        | 1/7 [00:01<00:11,  1.85s/it][A
+Evaluating:  14%|█▍        | 1/7 [00:01<00:11,  1.87s/it][AWarning: Inverse iteration for subset 5 did not converge, final diff = 3.19e-02
+
+Evaluating:  29%|██▊       | 2/7 [00:03<00:09,  1.93s/it][A
+Evaluating:  29%|██▊       | 2/7 [00:03<00:09,  1.94s/it][AWarning: Inverse iteration for subset 5 did not converge, final diff = 3.86e-02
+
+Evaluating:  43%|████▎     | 3/7 [00:05<00:07,  1.89s/it][A
+Evaluating:  43%|████▎     | 3/7 [00:05<00:07,  1.90s/it][AWarning: Inverse iteration for subset 5 did not converge, final diff = 3.53e-02
+
+Evaluating:  57%|█████▋    | 4/7 [00:07<00:05,  1.88s/it][A
+Evaluating:  57%|█████▋    | 4/7 [00:07<00:05,  1.90s/it][AWarning: Inverse iteration for subset 5 did not converge, final diff = 3.25e-02
+
+Evaluating:  71%|███████▏  | 5/7 [00:09<00:03,  1.87s/it][A
+Evaluating:  71%|███████▏  | 5/7 [00:09<00:03,  1.87s/it][AWarning: Inverse iteration for subset 5 did not converge, final diff = 3.49e-02
+
+Evaluating:  86%|████████▌ | 6/7 [00:11<00:01,  1.85s/it][A
+Evaluating:  86%|████████▌ | 6/7 [00:11<00:01,  1.86s/it][AWarning: Inverse iteration for subset 5 did not converge, final diff = 3.22e-02
+
+Evaluating: 100%|██████████| 7/7 [00:13<00:00,  1.89s/it][AEvaluating: 100%|██████████| 7/7 [00:13<00:00,  1.88s/it]
+Training epochs:   3%|▎         | 2/64 [01:59<1:01:44, 59.75s/it]
+Epoch 3/64:   0%|          | 0/26 [00:00<?, ?it/s][A
+Evaluating: 100%|██████████| 7/7 [00:13<00:00,  2.06s/it][AEvaluating: 100%|██████████| 7/7 [00:13<00:00,  1.96s/it]
+Epoch 2/64 - Train Loss: 29.015026 - Test Loss: 298.078642
+Training epochs:   3%|▎         | 2/64 [01:59<1:02:06, 60.10s/it]
+Epoch 3/64:   0%|          | 0/26 [00:00<?, ?it/s][AWarning: Inverse iteration for subset 5 did not converge, final diff = 3.60e-02
+
+Epoch 3/64:   4%|▍         | 1/26 [00:04<01:41,  4.07s/it][A
+Epoch 3/64:   4%|▍         | 1/26 [00:03<01:27,  3.51s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 4.16e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.06e-01
+
+Epoch 3/64:   8%|▊         | 2/26 [00:08<01:47,  4.47s/it][A
+Epoch 3/64:   8%|▊         | 2/26 [00:08<01:41,  4.23s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 8.09e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 3.30e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.23e-02
+
+Epoch 3/64:  12%|█▏        | 3/26 [00:15<02:04,  5.40s/it][A
+Epoch 3/64:  12%|█▏        | 3/26 [00:14<02:01,  5.27s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 8.32e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 2.26e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.91e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.01e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.33e-01
+
+Epoch 3/64:  15%|█▌        | 4/26 [00:23<02:25,  6.60s/it][A
+Epoch 3/64:  15%|█▌        | 4/26 [00:23<02:23,  6.52s/it][AWarning: Inverse iteration for subset 6 did not converge, final diff = 2.75e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.92e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.43e-01
+Warning: Inverse iteration for subset 0 did not converge, final diff = 8.28e-03
+
+Epoch 3/64:  19%|█▉        | 5/26 [00:29<02:14,  6.42s/it][A
+Epoch 3/64:  19%|█▉        | 5/26 [00:30<02:15,  6.47s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.41e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 2.92e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.97e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 3.19e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.91e-01
+
+Epoch 3/64:  23%|██▎       | 6/26 [00:37<02:18,  6.94s/it][A
+Epoch 3/64:  23%|██▎       | 6/26 [00:37<02:18,  6.90s/it][AWarning: Inverse iteration for subset 6 did not converge, final diff = 3.09e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 3.08e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 1.10e-02
+
+Epoch 3/64:  27%|██▋       | 7/26 [00:45<02:17,  7.23s/it][A
+Epoch 3/64:  27%|██▋       | 7/26 [00:45<02:17,  7.22s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.86e-02
+Warning: Inverse iteration for subset 6 did not converge, final diff = 2.90e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.96e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 1.62e-01
+
+Epoch 3/64:  31%|███       | 8/26 [00:53<02:13,  7.43s/it][A
+Epoch 3/64:  31%|███       | 8/26 [00:53<02:14,  7.45s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 8.41e-02
+Warning: Inverse iteration for subset 6 did not converge, final diff = 2.80e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.94e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 1.21e-01
+
+Epoch 3/64:  35%|███▍      | 9/26 [01:01<02:09,  7.63s/it][A
+Epoch 3/64:  35%|███▍      | 9/26 [01:01<02:10,  7.65s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 9.78e-02
+Warning: Inverse iteration for subset 6 did not converge, final diff = 2.61e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.95e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 9.91e-02
+
+Epoch 3/64:  38%|███▊      | 10/26 [01:09<02:04,  7.77s/it][A
+Epoch 3/64:  38%|███▊      | 10/26 [01:09<02:04,  7.78s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 9.98e-02
+Warning: Inverse iteration for subset 6 did not converge, final diff = 2.11e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.95e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 1.48e-01
+
+Epoch 3/64:  42%|████▏     | 11/26 [01:17<01:57,  7.85s/it][A
+Epoch 3/64:  42%|████▏     | 11/26 [01:17<01:57,  7.86s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.02e-01
+Warning: Inverse iteration for subset 6 did not converge, final diff = 1.93e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.93e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 1.73e-01
+
+Epoch 3/64:  46%|████▌     | 12/26 [01:25<01:50,  7.90s/it][A
+Epoch 3/64:  46%|████▌     | 12/26 [01:25<01:50,  7.90s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.03e-01
+Warning: Inverse iteration for subset 6 did not converge, final diff = 1.31e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.97e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.01e-01
+
+Epoch 3/64:  50%|█████     | 13/26 [01:33<01:42,  7.91s/it][A
+Epoch 3/64:  50%|█████     | 13/26 [01:33<01:42,  7.91s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.01e-01
+Warning: Inverse iteration for subset 6 did not converge, final diff = 1.64e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.95e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 1.97e-01
+Warning: Inverse iteration for subset 0 did not converge, final diff = 1.85e-04
+
+Epoch 3/64:  54%|█████▍    | 14/26 [01:41<01:35,  7.94s/it][A
+Epoch 3/64:  54%|█████▍    | 14/26 [01:41<01:35,  7.94s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.04e-01
+Warning: Inverse iteration for subset 6 did not converge, final diff = 1.62e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.96e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 1.71e-01
+Warning: Inverse iteration for subset 0 did not converge, final diff = 1.97e-02
+
+Epoch 3/64:  58%|█████▊    | 15/26 [01:49<01:27,  7.97s/it][A
+Epoch 3/64:  58%|█████▊    | 15/26 [01:49<01:27,  7.97s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.00e-01
+Warning: Inverse iteration for subset 6 did not converge, final diff = 1.48e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.95e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 1.58e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.18e-02
+Warning: Inverse iteration for subset 0 did not converge, final diff = 1.53e-01
+
+Epoch 3/64:  62%|██████▏   | 16/26 [02:00<01:29,  8.99s/it][A
+Epoch 3/64:  62%|██████▏   | 16/26 [02:01<01:29,  9.00s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.04e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.61e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.08e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 1.91e-02
+
+Epoch 3/64:  65%|██████▌   | 17/26 [02:09<01:21,  9.09s/it][A
+Epoch 3/64:  65%|██████▌   | 17/26 [02:10<01:21,  9.09s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.03e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 3.03e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 1.95e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.03e-02
+
+Epoch 3/64:  69%|██████▉   | 18/26 [02:18<01:11,  8.96s/it][A
+Epoch 3/64:  69%|██████▉   | 18/26 [02:19<01:11,  8.96s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.06e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 3.03e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.58e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.07e-02
+
+Epoch 3/64:  73%|███████▎  | 19/26 [02:26<01:00,  8.58s/it][A
+Epoch 3/64:  73%|███████▎  | 19/26 [02:26<01:00,  8.58s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.03e-01
+Warning: Inverse iteration for subset 6 did not converge, final diff = 9.63e-02
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.97e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.30e-02
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.72e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.77e-02
+
+Epoch 3/64:  77%|███████▋  | 20/26 [02:35<00:53,  8.86s/it][A
+Epoch 3/64:  77%|███████▋  | 20/26 [02:36<00:53,  8.86s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.03e-01
+Warning: Inverse iteration for subset 6 did not converge, final diff = 2.35e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.93e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.79e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.72e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.77e-02
+
+Epoch 3/64:  81%|████████  | 21/26 [02:46<00:47,  9.43s/it][A
+Epoch 3/64:  81%|████████  | 21/26 [02:47<00:47,  9.43s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.05e-01
+Warning: Inverse iteration for subset 6 did not converge, final diff = 2.61e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.92e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.91e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.76e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.73e-02
+
+Epoch 3/64:  85%|████████▍ | 22/26 [02:57<00:39,  9.85s/it][A
+Epoch 3/64:  85%|████████▍ | 22/26 [02:57<00:39,  9.85s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.03e-01
+Warning: Inverse iteration for subset 6 did not converge, final diff = 2.63e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.95e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.93e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.81e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.77e-02
+
+Epoch 3/64:  88%|████████▊ | 23/26 [03:08<00:30, 10.31s/it][A
+Epoch 3/64:  88%|████████▊ | 23/26 [03:09<00:30, 10.31s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.00e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.88e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.85e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.78e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.85e-02
+
+Epoch 3/64:  92%|█████████▏| 24/26 [03:17<00:19,  9.93s/it][A
+Epoch 3/64:  92%|█████████▏| 24/26 [03:18<00:19,  9.93s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.04e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.86e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.86e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.77e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 3.05e-02
+
+Epoch 3/64:  96%|█████████▌| 25/26 [03:26<00:09,  9.71s/it][A
+Epoch 3/64:  96%|█████████▌| 25/26 [03:27<00:09,  9.71s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.02e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.90e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.87e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.80e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.96e-02
+
+Epoch 3/64: 100%|██████████| 26/26 [03:34<00:00,  8.95s/it][AEpoch 3/64: 100%|██████████| 26/26 [03:34<00:00,  8.24s/it]
+
+Evaluating:   0%|          | 0/7 [00:00<?, ?it/s][A
+Epoch 3/64: 100%|██████████| 26/26 [03:34<00:00,  8.95s/it][AEpoch 3/64: 100%|██████████| 26/26 [03:34<00:00,  8.26s/it]
+
+Evaluating:   0%|          | 0/7 [00:00<?, ?it/s][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.04e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.90e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.90e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.81e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.76e-02
+
+Evaluating:  14%|█▍        | 1/7 [00:07<00:45,  7.60s/it][A
+Evaluating:  14%|█▍        | 1/7 [00:07<00:47,  7.99s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.03e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.87e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.87e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.80e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 3.19e-02
+
+Evaluating:  29%|██▊       | 2/7 [00:14<00:37,  7.44s/it][A
+Evaluating:  29%|██▊       | 2/7 [00:15<00:38,  7.76s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.02e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.88e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.89e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.80e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.85e-02
+
+Evaluating:  43%|████▎     | 3/7 [00:22<00:29,  7.48s/it][A
+Evaluating:  43%|████▎     | 3/7 [00:23<00:30,  7.65s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.05e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.90e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.90e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.82e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.78e-02
+
+Evaluating:  57%|█████▋    | 4/7 [00:29<00:22,  7.38s/it][A
+Evaluating:  57%|█████▋    | 4/7 [00:30<00:22,  7.53s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.02e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.88e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.87e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.81e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.93e-02
+
+Evaluating:  71%|███████▏  | 5/7 [00:37<00:14,  7.44s/it][A
+Evaluating:  71%|███████▏  | 5/7 [00:38<00:15,  7.63s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.04e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.88e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.87e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.78e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.70e-02
+
+Evaluating:  86%|████████▌ | 6/7 [00:44<00:07,  7.39s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.06e-01
+
+Evaluating:  86%|████████▌ | 6/7 [00:45<00:07,  7.57s/it][AWarning: Inverse iteration for subset 5 did not converge, final diff = 2.89e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.90e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.84e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.44e-02
+
+Evaluating: 100%|██████████| 7/7 [00:52<00:00,  7.42s/it][AEvaluating: 100%|██████████| 7/7 [00:52<00:00,  7.43s/it]
+Epoch 3/64 - Train Loss: inf - Test Loss: 1554.664655
+Training epochs:   5%|▍         | 3/64 [06:25<2:36:45, 154.19s/it]
+Epoch 4/64:   0%|          | 0/26 [00:00<?, ?it/s][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.01e-01
+
+Evaluating: 100%|██████████| 7/7 [00:53<00:00,  7.52s/it][AEvaluating: 100%|██████████| 7/7 [00:53<00:00,  7.59s/it]
+Training epochs:   5%|▍         | 3/64 [06:27<2:37:21, 154.78s/it]
+Epoch 4/64:   0%|          | 0/26 [00:00<?, ?it/s][AWarning: Inverse iteration for subset 5 did not converge, final diff = 2.86e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.87e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.80e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.82e-02
+
+Epoch 4/64:   4%|▍         | 1/26 [00:09<03:59,  9.60s/it][A
+Epoch 4/64:   4%|▍         | 1/26 [00:08<03:31,  8.48s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.03e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.88e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.89e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.81e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.83e-02
+
+Epoch 4/64:   8%|▊         | 2/26 [00:18<03:33,  8.90s/it][A
+Epoch 4/64:   8%|▊         | 2/26 [00:16<03:22,  8.43s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.03e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.89e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.90e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.85e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.54e-02
+
+Epoch 4/64:  12%|█▏        | 3/26 [00:26<03:18,  8.65s/it][A
+Epoch 4/64:  12%|█▏        | 3/26 [00:25<03:13,  8.40s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.06e-01
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.88e-01
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.89e-01
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.89e-01
+Warning: Inverse iteration for subset 1 did not converge, final diff = 2.95e-02
+
+Epoch 4/64:  15%|█▌        | 4/26 [00:33<03:03,  8.33s/it][A
+Epoch 4/64:  15%|█▌        | 4/26 [00:34<03:06,  8.49s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.03e-01
+W0728 19:57:37.052201 1252737 torch/distributed/elastic/agent/server/api.py:704] Received Signals.SIGTERM death signal, shutting down workers
+W0728 19:57:37.053143 1252737 torch/distributed/elastic/multiprocessing/api.py:897] Sending process 1252779 closing signal SIGTERM
+W0728 19:57:37.053611 1252737 torch/distributed/elastic/multiprocessing/api.py:897] Sending process 1252780 closing signal SIGTERM
+Traceback (most recent call last):
+  File "/lus/eagle/projects/fthmc/software/ml/bin/torchrun", line 8, in <module>
+    sys.exit(main())
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/run.py", line 919, in main
+    run(args)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/run.py", line 910, in run
+    elastic_launch(
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/launcher/api.py", line 260, in launch_agent
+    result = agent.run()
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
+    result = f(*args, **kwargs)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/elastic/agent/server/api.py", line 696, in run
+    result = self._invoke_run(role)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/elastic/agent/server/api.py", line 855, in _invoke_run
+    time.sleep(monitor_interval)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
+    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
+torch.distributed.elastic.multiprocessing.api.SignalException: Process 1252737 got signal: 15

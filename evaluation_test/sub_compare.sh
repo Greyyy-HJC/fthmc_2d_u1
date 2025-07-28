@@ -7,7 +7,7 @@
 #PBS -q by-gpu
 #PBS -j oe
 #PBS -l walltime=12:00:00
-#PBS -o /eagle/fthmc/run/fthmc_2d_u1/evaluation_test/logs/compare_fthmc_rsat_L64_lr0.001_wd0.0001_init0.001.log
+#PBS -o /eagle/fthmc/run/fthmc_2d_u1/evaluation_test/logs/compare_fthmc_test_localv9_L64_b7_4096.log
 
 # switch to the submit directory
 WORKDIR=/eagle/fthmc/run/fthmc_2d_u1/evaluation_test
@@ -41,7 +41,9 @@ export PYTHONPATH="/eagle/fthmc/run"
 echo "PYTHONPATH: $PYTHONPATH"
 
 # run
-python compare_fthmc.py --lattice_size 64 --n_configs 4096 --beta 6.0 --train_beta 4.0 --step_size 0.06 --ft_step_size 0.05 --max_lag 200 --rand_seed 2008 --model_tag 'rsat' --save_tag 'rsat_L32_lr0.001_wd0.0001_init0.001' --device 'cuda'
+# python compare_hmc.py --lattice_size 64 --n_configs 4096 --beta 7.0 --step_size 0.06 --max_lag 200 --rand_seed 2008 --device 'cuda'
+
+python compare_fthmc.py --lattice_size 64 --n_configs 4096 --beta 7.0 --train_beta 2.0 --step_size 0.06 --ft_step_size 0.05 --max_lag 200 --rand_seed 2008 --model_tag 'v9' --save_tag 'test_localv9' --device 'cuda'
 
 # calculate total time
 end_time=$(date +"%Y-%m-%d %H:%M:%S")

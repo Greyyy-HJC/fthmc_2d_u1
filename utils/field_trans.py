@@ -48,6 +48,8 @@ class FieldTransformation:
         self.hyperparams['eps'] = 1e-8
         self.hyperparams['factor'] = 0.5
         self.hyperparams['patience'] = 5
+        self.hyperparams['early_stopping'] = True
+        self.hyperparams['early_stopping_patience'] = 10
         
         if input_hyperparams is not None:
             self.hyperparams.update(input_hyperparams)
@@ -529,6 +531,11 @@ class FieldTransformation:
         test_losses = []
         best_loss = float('inf')
         
+        # Early stopping variables
+        early_stopping_counter = 0
+        early_stopping_patience = self.hyperparams['early_stopping_patience']
+        use_early_stopping = self.hyperparams['early_stopping']
+        
         self.train_beta = train_beta
         
         # Create data loaders
@@ -576,10 +583,19 @@ class FieldTransformation:
                   f"Train Loss: {train_loss:.6f} - "
                   f"Test Loss: {test_loss:.6f}")
             
-            # Save best model
+            # Save best model and check early stopping
             if test_loss < best_loss:
                 self._save_best_model(epoch, test_loss)
                 best_loss = test_loss
+                early_stopping_counter = 0  # Reset counter when improvement found
+            else:
+                early_stopping_counter += 1
+            
+            # Check early stopping
+            if use_early_stopping and early_stopping_counter >= early_stopping_patience:
+                self.print(f"\nEarly stopping triggered after {epoch+1} epochs "
+                          f"(no improvement for {early_stopping_patience} epochs)")
+                break
             
             # Update learning rate schedulers
             self._update_schedulers(test_loss)

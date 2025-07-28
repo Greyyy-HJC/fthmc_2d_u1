@@ -7,7 +7,7 @@
 #PBS -q by-gpu
 #PBS -j oe
 #PBS -l walltime=12:00:00
-#PBS -o /eagle/fthmc/run/fthmc_2d_u1/ft_train_tune/logs/train_L32_b2.0-b2.0_rsat_lr0.005_wd0.001_init0.0001.log
+#PBS -o /eagle/fthmc/run/fthmc_2d_u1/ft_train_tune/logs/train_L32_b2.0-b2.0_lite_tuned_with_init.log
 
 # switch to the submit directory
 WORKDIR=/eagle/fthmc/run/fthmc_2d_u1/ft_train_tune
@@ -52,9 +52,10 @@ export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128,expandable_segments:True
 torchrun --standalone --nproc_per_node=2 train.py \
     --lattice_size 32 --min_beta 2.0 --max_beta 2.0 --beta_gap 1.0 \
     --n_epochs 64 --batch_size 32 --n_subsets 8 --n_workers 0 \
-    --model_tag 'rsat' --save_tag 'rsat_L32_lr0.005_wd0.001_init0.0001' --rand_seed 2008 --if_identity_init \
-    --lr 0.005 --weight_decay 0.001 --init_std 0.0001 \
-    --continue_beta 2.0 \
+    --model_tag 'lite' --save_tag 'lite_L32_tuned_with_init' --rand_seed 2008 --if_identity_init \
+    # --continue_beta 2.0 
+    # --lr 0.005 --weight_decay 0.001 --init_std 0.0001 \
+    
 
 # calculate total time
 end_time=$(date +"%Y-%m-%d %H:%M:%S")
