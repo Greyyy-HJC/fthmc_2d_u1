@@ -7,7 +7,7 @@
 #PBS -q by-gpu
 #PBS -j oe
 #PBS -l walltime=4:00:00
-#PBS -o /eagle/fthmc/run/fthmc_2d_u1/ft_train_test/logs/train_L32_b2.0-b2.0_test_localv2_batch32.log
+#PBS -o /eagle/fthmc/run/fthmc_2d_u1/ft_train_test/logs/train_L32_b2.0-b2.0_test_lite_new.log
 
 # switch to the submit directory
 WORKDIR=/eagle/fthmc/run/fthmc_2d_u1/ft_train_test
@@ -44,7 +44,7 @@ echo "PYTHONPATH: $PYTHONPATH"
 export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128,expandable_segments:True
 
 # run train.py
-torchrun --standalone --nproc_per_node=2 train.py --lattice_size 32 --min_beta 2.0 --max_beta 2.0 --beta_gap 0.5 --n_epochs 64 --batch_size 32 --n_subsets 8 --n_workers 0 --model_tag 'v2' --save_tag 'test_localv2_batch32' --rand_seed 2008 --if_identity_init
+torchrun --standalone --nproc_per_node=2 train.py --lattice_size 32 --min_beta 2.0 --max_beta 2.0 --beta_gap 0.5 --n_epochs 64 --batch_size 64 --n_subsets 8 --n_workers 0 --model_tag 'lite_new' --save_tag 'test_lite_new' --rand_seed 2008 --if_identity_init
 
 # calculate total time
 end_time=$(date +"%Y-%m-%d %H:%M:%S")

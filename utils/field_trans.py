@@ -42,8 +42,8 @@ class FieldTransformation:
         
         self.hyperparams = {}
         self.hyperparams['init_std'] = 0.001
-        self.hyperparams['lr'] = 0.005
-        self.hyperparams['weight_decay'] = 0.001
+        self.hyperparams['lr'] = 0.001
+        self.hyperparams['weight_decay'] = 0.0001
         self.hyperparams['betas'] = (0.9, 0.999)
         self.hyperparams['eps'] = 1e-8
         self.hyperparams['factor'] = 0.5

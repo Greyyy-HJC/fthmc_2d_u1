@@ -1,0 +1,271 @@
+ 
+>>> PBS_NODEFILE content:
+sophia-gpu-07.lab.alcf.anl.gov
+1n*1t
+Mon Jul 28 22:43:39 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.127.05             Driver Version: 550.127.05     CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          Off |   00000000:B7:00.0 Off |                    0 |
+| N/A   25C    P0             52W /  400W |       1MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA A100-SXM4-40GB          Off |   00000000:BD:00.0 Off |                    0 |
+| N/A   24C    P0             54W /  400W |       1MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Thu_Mar_28_02:18:24_PDT_2024
+Cuda compilation tools, release 12.4, V12.4.131
+Build cuda_12.4.r12.4/compiler.34097967_0
+Start time: 2025-07-28 22:43:40
+Python 3.9.18
+Python path: /lus/eagle/projects/fthmc/software/ml/bin/python
+PYTHONPATH: /eagle/fthmc/run
+You are using a CUDA device ('NVIDIA A100-SXM4-40GB') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+[W728 22:44:04.563292465 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+============================================================
+>>> CUDA device count: 2
+PyTorch version: 2.5.0+cu124
+CUDA available: True
+>>> Arguments:
+Lattice size: 32x32
+Minimum beta: 2.0
+Maximum beta: 2.0
+Beta gap: 0.5
+Continue training from beta: None
+Number of epochs: 64
+Batch size: 32
+Number of subsets: 8
+Number of workers: 0
+Model tag: v2
+Save tag: test_localv2_batch32_dropout
+Random seed: 2008
+Identity initialization: True
+Check Jacobian: False
+Hyperparameters: {}
+============================================================
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+[W728 22:44:04.798975237 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+Trying to use torch.compile for optimized computation...
+Successfully initialized torch.compile
+>>> Training from scratch
+Loaded data shape: torch.Size([4096, 2, 32, 32])
+Training data shape: torch.Size([3276, 2, 32, 32])
+Testing data shape: torch.Size([820, 2, 32, 32])
+
+>>> Training the model at beta =  2.0
+
+>>> Training the model at beta = 2.0
+
+Training epochs:   0%|          | 0/64 [00:00<?, ?it/s]Training epochs:   0%|          | 0/64 [00:00<?, ?it/s]
+
+Epoch 1/64:   0%|          | 0/52 [00:00<?, ?it/s][AEpoch 1/64:   0%|          | 0/52 [00:00<?, ?it/s][A
+
+Epoch 1/64:   2%|▏         | 1/52 [00:11<10:03, 11.83s/it][AEpoch 1/64:   2%|▏         | 1/52 [00:11<10:03, 11.83s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.32e-04
+Warning: Inverse iteration for subset 6 did not converge, final diff = 9.41e-05
+Warning: Inverse iteration for subset 5 did not converge, final diff = 8.42e-05
+Warning: Inverse iteration for subset 4 did not converge, final diff = 9.51e-05
+Warning: Inverse iteration for subset 3 did not converge, final diff = 8.48e-05
+Warning: Inverse iteration for subset 2 did not converge, final diff = 1.24e-04
+Warning: Inverse iteration for subset 1 did not converge, final diff = 1.18e-04
+Warning: Inverse iteration for subset 0 did not converge, final diff = 7.11e-05
+
+Epoch 1/64:   4%|▍         | 2/52 [00:18<07:25,  8.91s/it][A
+Epoch 1/64:   4%|▍         | 2/52 [00:18<07:25,  8.92s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 3.39e-04
+Warning: Inverse iteration for subset 6 did not converge, final diff = 2.20e-04
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.28e-04
+Warning: Inverse iteration for subset 4 did not converge, final diff = 1.86e-04
+Warning: Inverse iteration for subset 3 did not converge, final diff = 3.70e-04
+Warning: Inverse iteration for subset 2 did not converge, final diff = 2.52e-04
+Warning: Inverse iteration for subset 1 did not converge, final diff = 3.50e-04
+Warning: Inverse iteration for subset 0 did not converge, final diff = 2.36e-04
+
+Epoch 1/64:   6%|▌         | 3/52 [00:25<06:27,  7.90s/it][A
+Epoch 1/64:   6%|▌         | 3/52 [00:25<06:27,  7.90s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 9.00e-04
+Warning: Inverse iteration for subset 6 did not converge, final diff = 5.57e-04
+Warning: Inverse iteration for subset 5 did not converge, final diff = 4.49e-04
+Warning: Inverse iteration for subset 4 did not converge, final diff = 5.21e-04
+Warning: Inverse iteration for subset 3 did not converge, final diff = 8.54e-04
+Warning: Inverse iteration for subset 2 did not converge, final diff = 5.32e-04
+Warning: Inverse iteration for subset 1 did not converge, final diff = 9.59e-04
+Warning: Inverse iteration for subset 0 did not converge, final diff = 7.15e-04
+
+Epoch 1/64:   8%|▊         | 4/52 [00:31<05:47,  7.24s/it][A
+Epoch 1/64:   8%|▊         | 4/52 [00:31<05:47,  7.24s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 2.02e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 1.30e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 1.26e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 1.06e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.49e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 1.33e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 1.90e-03
+Warning: Inverse iteration for subset 0 did not converge, final diff = 1.67e-03
+
+Epoch 1/64:  10%|▉         | 5/52 [00:37<05:20,  6.83s/it][A
+Epoch 1/64:  10%|▉         | 5/52 [00:37<05:20,  6.83s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 4.07e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 2.86e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 2.47e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 2.62e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 6.75e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 3.05e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 4.91e-03
+Warning: Inverse iteration for subset 0 did not converge, final diff = 3.96e-03
+
+Epoch 1/64:  12%|█▏        | 6/52 [00:43<05:03,  6.59s/it][A
+Epoch 1/64:  12%|█▏        | 6/52 [00:43<05:03,  6.59s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 9.68e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 5.36e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 5.31e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 3.80e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 1.33e-02
+Warning: Inverse iteration for subset 2 did not converge, final diff = 8.13e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 7.82e-03
+Warning: Inverse iteration for subset 0 did not converge, final diff = 9.26e-03
+
+Epoch 1/64:  13%|█▎        | 7/52 [00:49<04:48,  6.42s/it][A
+Epoch 1/64:  13%|█▎        | 7/52 [00:49<04:48,  6.42s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 1.28e-02
+Warning: Inverse iteration for subset 6 did not converge, final diff = 8.49e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 7.42e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 6.45e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 9.67e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 9.89e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 1.08e-02
+Warning: Inverse iteration for subset 0 did not converge, final diff = 1.22e-02
+
+Epoch 1/64:  15%|█▌        | 8/52 [00:56<04:40,  6.37s/it][A
+Epoch 1/64:  15%|█▌        | 8/52 [00:56<04:40,  6.37s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 8.54e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 6.49e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 4.88e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 5.99e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 9.26e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 7.47e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 1.14e-02
+Warning: Inverse iteration for subset 0 did not converge, final diff = 9.66e-03
+
+Epoch 1/64:  17%|█▋        | 9/52 [01:02<04:30,  6.29s/it][A
+Epoch 1/64:  17%|█▋        | 9/52 [01:02<04:30,  6.29s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 7.61e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 6.31e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 4.71e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 4.24e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 8.17e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 4.31e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 7.61e-03
+Warning: Inverse iteration for subset 0 did not converge, final diff = 6.56e-03
+
+Epoch 1/64:  19%|█▉        | 10/52 [01:08<04:20,  6.21s/it][A
+Epoch 1/64:  19%|█▉        | 10/52 [01:08<04:20,  6.21s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 5.98e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 5.77e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 3.53e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 4.03e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 4.01e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 4.07e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 5.38e-03
+Warning: Inverse iteration for subset 0 did not converge, final diff = 4.81e-03
+
+Epoch 1/64:  21%|██        | 11/52 [01:14<04:12,  6.17s/it][A
+Epoch 1/64:  21%|██        | 11/52 [01:14<04:12,  6.17s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 5.58e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 6.22e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 3.32e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 4.80e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 4.13e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 3.66e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 5.17e-03
+Warning: Inverse iteration for subset 0 did not converge, final diff = 5.36e-03
+
+Epoch 1/64:  23%|██▎       | 12/52 [01:20<04:08,  6.22s/it][A
+Epoch 1/64:  23%|██▎       | 12/52 [01:20<04:08,  6.22s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 4.97e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 5.30e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 5.21e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 4.36e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 3.29e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 4.32e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 4.94e-03
+Warning: Inverse iteration for subset 0 did not converge, final diff = 4.47e-03
+
+Epoch 1/64:  25%|██▌       | 13/52 [01:26<04:01,  6.18s/it][A
+Epoch 1/64:  25%|██▌       | 13/52 [01:26<04:01,  6.18s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 6.15e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 6.45e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 5.25e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 5.70e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 3.51e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 6.23e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 5.22e-03
+Warning: Inverse iteration for subset 0 did not converge, final diff = 6.30e-03
+
+Epoch 1/64:  27%|██▋       | 14/52 [01:32<03:53,  6.15s/it][A
+Epoch 1/64:  27%|██▋       | 14/52 [01:32<03:53,  6.15s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 5.33e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 7.78e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 8.69e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 6.20e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 3.36e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 4.88e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 6.66e-03
+Warning: Inverse iteration for subset 0 did not converge, final diff = 5.63e-03
+
+Epoch 1/64:  29%|██▉       | 15/52 [01:38<03:45,  6.11s/it][A
+Epoch 1/64:  29%|██▉       | 15/52 [01:38<03:45,  6.11s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 3.91e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 8.15e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 7.72e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 5.17e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 3.28e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 6.42e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 8.49e-03
+Warning: Inverse iteration for subset 0 did not converge, final diff = 6.86e-03
+
+Epoch 1/64:  31%|███       | 16/52 [01:45<03:40,  6.12s/it][A
+Epoch 1/64:  31%|███       | 16/52 [01:45<03:40,  6.12s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 4.74e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 6.22e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 6.51e-03
+Warning: Inverse iteration for subset 4 did not converge, final diff = 9.42e-03
+Warning: Inverse iteration for subset 3 did not converge, final diff = 2.90e-03
+Warning: Inverse iteration for subset 2 did not converge, final diff = 7.89e-03
+Warning: Inverse iteration for subset 1 did not converge, final diff = 5.22e-03
+Warning: Inverse iteration for subset 0 did not converge, final diff = 4.25e-03
+
+Epoch 1/64:  33%|███▎      | 17/52 [01:51<03:34,  6.13s/it][A
+Epoch 1/64:  33%|███▎      | 17/52 [01:51<03:34,  6.13s/it][AWarning: Inverse iteration for subset 7 did not converge, final diff = 5.46e-03
+Warning: Inverse iteration for subset 6 did not converge, final diff = 6.25e-03
+Warning: Inverse iteration for subset 5 did not converge, final diff = 6.05e-03
+W0728 22:45:59.646440 2161946 torch/distributed/elastic/agent/server/api.py:704] Received Signals.SIGTERM death signal, shutting down workers
+W0728 22:45:59.647390 2161946 torch/distributed/elastic/multiprocessing/api.py:897] Sending process 2162085 closing signal SIGTERM
+W0728 22:45:59.647860 2161946 torch/distributed/elastic/multiprocessing/api.py:897] Sending process 2162086 closing signal SIGTERM
+Traceback (most recent call last):
+  File "/lus/eagle/projects/fthmc/software/ml/bin/torchrun", line 8, in <module>
+    sys.exit(main())
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/run.py", line 919, in main
+    run(args)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/run.py", line 910, in run
+    elastic_launch(
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/launcher/api.py", line 260, in launch_agent
+    result = agent.run()
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/elastic/metrics/api.py", line 137, in wrapper
+    result = f(*args, **kwargs)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/elastic/agent/server/api.py", line 696, in run
+    result = self._invoke_run(role)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/elastic/agent/server/api.py", line 855, in _invoke_run
+    time.sleep(monitor_interval)
+  File "/lus/eagle/projects/fthmc/software/ml/lib64/python3.9/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
+    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
+torch.distributed.elastic.multiprocessing.api.SignalException: Process 2161946 got signal: 15

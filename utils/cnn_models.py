@@ -83,12 +83,16 @@ class LocalNetv2(nn.Module): #! add residual block and channel attention
             padding='same',
             padding_mode='circular'
         )
+        # self.conv1 = nn.utils.weight_norm(self.conv1)
+        self.norm1 = nn.GroupNorm(2, combined_input_channels * 2)
         self.activation1 = nn.GELU()
         
         # Residual block
         ch = combined_input_channels * 2
         self.res_conv1 = nn.Conv2d(ch, ch, config.kernel_size, padding='same', padding_mode='circular')
+        # self.res_norm1 = nn.GroupNorm(2, ch)
         self.res_conv2 = nn.Conv2d(ch, ch, config.kernel_size, padding='same', padding_mode='circular')
+        # self.res_norm2 = nn.GroupNorm(2, ch)
         
         # Channel attention
         # squeeze -> reduce -> expand -> sigmoid
@@ -108,7 +112,12 @@ class LocalNetv2(nn.Module): #! add residual block and channel attention
             padding='same',
             padding_mode='circular'
         )
+        # self.conv2 = nn.utils.weight_norm(self.conv2)
+        self.norm2 = nn.GroupNorm(2, config.plaq_output_channels + config.rect_output_channels)
         self.activation2 = nn.GELU()
+        
+        self.res_scale = nn.Parameter(torch.tensor(0.3))
+        self.output_scale = nn.Parameter(torch.ones(1) * 0.1)
         
     def forward(self, plaq_features, rect_features):
         # plaq_features shape: [batch_size, plaq_input_channels, L, L]
@@ -119,13 +128,16 @@ class LocalNetv2(nn.Module): #! add residual block and channel attention
         
         # First conv layer
         x = self.conv1(x)
+        x = self.norm1(x)
         x = self.activation1(x)
         
         # Residual block
         res = self.res_conv1(x)
+        # res = self.res_norm1(res)
         res = self.activation1(res)
         res = self.res_conv2(res)
-        x = x + res
+        # res = self.res_norm2(res)
+        x = x + res * self.res_scale
         
         # Channel attention
         w = self.attn(x)
@@ -133,8 +145,10 @@ class LocalNetv2(nn.Module): #! add residual block and channel attention
         
         # Second conv layer
         x = self.conv2(x)
+        x = self.norm2(x)
         x = self.activation2(x)
-        x = torch.arctan(x) / torch.pi / 2  # range [-1/4, 1/4]
+        # x = torch.arctan(x) / torch.pi / 2  # range [-1/4, 1/4]
+        x = torch.tanh(x) * self.output_scale
         
         # Split output into plaq and rect coefficients
         plaq_coeffs = x[:, :4, :, :]  # [batch_size, 4, L, L]
@@ -1028,7 +1042,97 @@ class LocalNetv14(nn.Module): #! add residual block and channel attention + Coor
         plaq_coeffs = x[:, :4, :, :]  # [batch_size, 4, L, L]
         rect_coeffs = x[:, 4:, :, :]  # [batch_size, 8, L, L]
         
-        return plaq_coeffs, rect_coeffs     
+        return plaq_coeffs, rect_coeffs  
+    
+
+class ResidualBlock(nn.Module):
+    """Pre-norm + Dropout + Learnable scaling"""
+    def __init__(self, channels, kernel_size=(3, 3)):
+        super().__init__()
+        self.norm1 = nn.GroupNorm(2, channels)
+        self.conv1 = nn.Conv2d(channels, channels, kernel_size, 
+                               padding='same', padding_mode='circular')
+        
+        self.norm2 = nn.GroupNorm(2, channels)
+        self.conv2 = nn.Conv2d(channels, channels, kernel_size, 
+                               padding='same', padding_mode='circular')
+
+        self.activation = nn.SiLU()
+        self.alpha = nn.Parameter(torch.tensor(0.5))  # learnable residual scaling
+
+    def forward(self, x):
+        identity = x
+
+        out = self.norm1(x)
+        out = self.activation(out)
+        out = self.conv1(out)
+
+        out = self.norm2(out)
+        out = self.activation(out)
+        out = self.conv2(out)
+
+        return identity + self.alpha * out
+    
+
+class LocalNetv15(nn.Module):  # CoordConv + two ResNet blocks + stable-style scaling
+    def __init__(self):
+        super().__init__()
+        config = NetConfig()
+        # Input channels + 2 for CoordConv
+        cin = config.plaq_input_channels + config.rect_input_channels + 2
+        hid = config.hidden_channels
+        cout = config.plaq_output_channels + config.rect_output_channels
+
+        # First conv projection
+        self.conv1 = nn.Conv2d(
+            cin, hid,
+            config.kernel_size,
+            padding='same', padding_mode='circular'
+        )
+        self.norm1 = nn.GroupNorm(2, hid)
+        self.act1 = nn.GELU()
+
+        # Two ResidualBlocks with fixed scaling
+        self.res_block1 = ResidualBlock(hid, config.kernel_size)
+        self.res_block2 = ResidualBlock(hid, config.kernel_size)
+
+        # Output conv
+        self.conv2 = nn.Conv2d(
+            hid, cout,
+            config.kernel_size,
+            padding='same', padding_mode='circular'
+        )
+        self.act2 = nn.GELU()
+
+        # Learnable output scaling
+        self.output_scale = nn.Parameter(torch.ones(1) * 0.05)
+
+    def forward(self, plaq_features, rect_features):
+        B, _, H, W = plaq_features.shape
+        device = plaq_features.device
+        # CoordConv channels
+        xs = torch.linspace(-1, 1, W, device=device).view(1, 1, 1, W).expand(B, 1, H, W)
+        ys = torch.linspace(-1, 1, H, device=device).view(1, 1, H, 1).expand(B, 1, H, W)
+        coords = torch.cat([xs, ys], dim=1)
+
+        # Combine inputs
+        x = torch.cat([plaq_features, rect_features, coords], dim=1)
+        # Project & normalize
+        x = self.act1(self.norm1(self.conv1(x)))
+
+        # Two ResNet blocks with tunable scaling
+        x = self.res_block1(x)
+        x = self.res_block2(x)
+
+        # Output projection
+        x = self.act2(self.conv2(x))
+        # Range limiting
+        x = torch.tanh(x) * self.output_scale
+
+        # Split output
+        plaq_coeffs = x[:, :4, :, :]
+        rect_coeffs = x[:, 4:, :, :]
+        return plaq_coeffs, rect_coeffs   
     
     
 def choose_cnn_model(model_tag):
@@ -1060,5 +1164,7 @@ def choose_cnn_model(model_tag):
         return LocalNetv13
     elif model_tag == 'v14':
         return LocalNetv14
+    elif model_tag == 'v15':
+        return LocalNetv15
     else:
         raise ValueError(f"Invalid model tag: {model_tag}")

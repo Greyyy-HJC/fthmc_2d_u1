@@ -21,7 +21,8 @@ torch_logger.propagate = False
 
 
 from fthmc_2d_u1.utils.func import plaq_from_field_batch, rect_from_field_batch, get_field_mask, get_plaq_mask, get_rect_mask
-from fthmc_2d_u1.utils.cnn_models import choose_cnn_model
+# from fthmc_2d_u1.utils.cnn_models import choose_cnn_model
+from fthmc_2d_u1.utils.best_model import choose_cnn_model
 
 class FieldTransformation:
     """Neural network based field transformation"""
@@ -42,8 +43,8 @@ class FieldTransformation:
         
         self.hyperparams = {}
         self.hyperparams['init_std'] = 0.001
-        self.hyperparams['lr'] = 0.005
-        self.hyperparams['weight_decay'] = 0.001
+        self.hyperparams['lr'] = 0.002
+        self.hyperparams['weight_decay'] = 0.0001
         self.hyperparams['betas'] = (0.9, 0.999)
         self.hyperparams['eps'] = 1e-8
         self.hyperparams['factor'] = 0.5

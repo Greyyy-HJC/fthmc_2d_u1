@@ -4,24 +4,35 @@ Try to find a better design of the neural network for the field transformation.
 
 ### Methods
 
-- fabric can help to train with multiple GPUs, enable larger batch size, but not for evaluation
-- inductor backend of compile can help to accelerate the evaluation, but not for training
-- possibly useful techniques:
-    - residual block
-    - channel attention
-    - weight normalization
-    - ReZero
-    - coordconv
+- PyTorch Lightning Fabric enables multi-GPU training with larger batch sizes by automatically handling data parallelism and gradient synchronization. However, it's not needed for evaluation since inference is simpler.
+
+- PyTorch 2.0's inductor backend optimizes model execution through just-in-time compilation, providing significant speedup for evaluation. Training doesn't benefit due to the dynamic nature of gradient computation. So I use the inductor backend for evaluation, and the eager backend for training.
+
+- Promising neural network techniques explored:
+    - Residual blocks: Skip connections that help train deeper networks by allowing gradients to flow more easily
+    - Channel attention: Mechanism to adaptively recalibrate channel-wise feature responses by explicitly modeling interdependencies between channels
+    - Weight normalization: Reparameterization of weights that accelerates convergence by decoupling the magnitude of weights from their direction
+    - ReZero: Initialize residual branches with zero weights to stabilize training of very deep networks
+    - CoordConv: Adds coordinate information to convolutions to help networks better understand spatial relationships
 
 ### Results
-- train on small beta can be applied to larger beta
-- train on small size can be applied to larger size, and the performance is similar to the model that trained on larger size
+- Models trained on smaller beta values generalize effectively to larger beta values, demonstrating good transfer learning capabilities
+- Models trained on smaller lattice sizes scale successfully to larger lattices, achieving comparable performance to models directly trained on larger sizes
 
 
-### Test Training on different models:
-- v1(baseline)
-- v2(residual block + channel attention)
+### Find the best model:
+- Explored 15 model variants (v1-v15) in [cnn_models.py](utils/cnn_models.py) by systematically combining different neural network techniques
+- Selected the 5 most promising architectures and consolidated them in [best_model.py](utils/best_model.py)
+- Initial evaluation: Trained all models on L=32 lattice at β=2.0 for 64 epochs to compare training loss
+- Further evaluation: Trained the three best models (simple, rsat, stable, lite) on L=32 lattice at β=6.0 for 64 epochs
+- Final testing: Evaluated models trained at β=2.0 and β=6.0 on larger L=64 lattice at β=7.0 to assess generalization capabilities
 
+- Now I prefer the model "lite"
+
+
+### Tuning hyperparams
+- Testing training with and without identity initialization showed similar loss values, however identity initialization led to more stable training behavior;
+- Tried to tune the hyperparams: learning rate, weight decay, and initial standard deviation of the normal distribution, training loss is not sensitive to these hyperparams;
 
 
 ### Tests 
@@ -71,11 +82,17 @@ Try to find a better design of the neural network for the field transformation.
 
 - add conv layer may not be a good idea, it can cause overfitting
 
+- don't do drop out, cause it will break the inversion of the FT
+[dropout](ft_train_test/logs/train_L32_b2.0-b2.0_test_localv2_batch32_dropout.log)
+
 Note: train on which L is denoted in the save tag.
 
 
 ### Running
+- can localv2 give a better performance on fthmc compared to localv1?
 - can localv2_batch32 reach a loss smaller than 16.94? if so, how about the performance on L64 b7?
+- can localv9 give a better performance on fthmc compared to localv1?
+
 
 ### Questions
 - Can this trained FT be effective even when the regular HMC is freezed?
