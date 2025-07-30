@@ -22,7 +22,7 @@ torch_logger.propagate = False
 
 from fthmc_2d_u1.utils.func import plaq_from_field_batch, rect_from_field_batch, get_field_mask, get_plaq_mask, get_rect_mask
 # from fthmc_2d_u1.utils.cnn_models import choose_cnn_model
-from fthmc_2d_u1.utils.best_model import choose_cnn_model
+from fthmc_2d_u1.utils.best_model_present import choose_cnn_model
 
 class FieldTransformation:
     """Neural network based field transformation"""

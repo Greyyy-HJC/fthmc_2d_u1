@@ -27,7 +27,8 @@ Try to find a better design of the neural network for the field transformation.
 - Further evaluation: Trained the three best models (simple, rsat, stable, lite) on L=32 lattice at β=6.0 for 64 epochs
 - Final testing: Evaluated models trained at β=2.0 and β=6.0 on larger L=64 lattice at β=7.0 to assess generalization capabilities
 
-- Now I prefer the model "lite"
+- The loss on L32 is not totally consistent with the performance on L64 b7
+- 
 
 
 ### Tuning hyperparams
@@ -74,7 +75,10 @@ Try to find a better design of the neural network for the field transformation.
 
 - Add kernel size from 3 to 4 makes it more difficult to bring down the loss
 
-- batch size 32 seems give better performance than batch size 64
+- batch size 32 seems give better performance than batch size 64, probably because the batch size 64 is not fully trained
+[simple_L64_b7_train_b2_batch64](evaluation_test/plots/comparison_fthmc_L64_beta7.0_train_beta2.0_ftstep0.05_test_simple.pdf)
+[simple_L64_b7_train_b2_batch32](evaluation_test/plots/comparison_fthmc_L64_beta7.0_train_beta2.0_ftstep0.05_test_simple_batch32.pdf)
+[simple_L64_b7_train_b6_batch64](evaluation_test/plots/comparison_fthmc_L64_beta7.0_train_beta6.0_ftstep0.05_test_simple.pdf)
 
 - with identity init, the performance is better
 
@@ -89,14 +93,15 @@ Note: train on which L is denoted in the save tag.
 
 
 ### Running
-- can localv2 give a better performance on fthmc compared to localv1?
-- can localv2_batch32 reach a loss smaller than 16.94? if so, how about the performance on L64 b7?
-- can localv9 give a better performance on fthmc compared to localv1?
 
 
 ### Questions
-- Can this trained FT be effective even when the regular HMC is freezed?
+- Is the autocorr the good metric to evaluate the performance of FT?
+[larger_auto_larger_topo](evaluation_test/plots/comparison_fthmc_L64_beta7.0_train_beta6.0_ftstep0.05_test_lite.pdf)
+[smaller_auto_smaller_topo](evaluation_test/plots/comparison_fthmc_L64_beta7.0_train_beta2.0_ftstep0.05_test_lite.pdf)
+- Hard to pick the best model, the performance is not stable
+- 
+
+
 - Is the rect term useful?
-- Will batch size affect the behavior of FT?
 - How to apply to SU(3)?
-- What if you continue to train on a specific beta, instead of move to the next beta?
